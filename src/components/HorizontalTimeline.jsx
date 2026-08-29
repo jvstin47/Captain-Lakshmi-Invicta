@@ -117,7 +117,7 @@ export default function HorizontalTimeline() {
               className="min-w-[320px] max-w-[360px] flex-shrink-0 p-6 bg-[#faf7f0] border-2 border-vintage-ink shadow-[4px_4px_0px_rgba(28,25,23,0.8)] hover:shadow-[6px_6px_0px_rgba(184,84,72,0.9)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group relative"
             >
               {/* Paper Corner Stamp Decoration */}
-              <div className="absolute top-2 right-2 text-[9px] font-mono text-terracotta border border-terracotta/40 px-1.5 py-0.2 uppercase font-bold">
+              <div className="absolute top-2 right-2 text-[9px] font-mono text-terracotta border border-terracotta/40 px-1.5 py-0.5 uppercase font-bold">
                 {item.year}
               </div>
 

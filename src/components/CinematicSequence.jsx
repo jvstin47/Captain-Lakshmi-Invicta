@@ -2,15 +2,21 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Compass, Film, Sparkles } from 'lucide-react';
 
 /**
- * CinematicSequence Engine — v2
+ * CinematicSequence Engine — v3
  *
- * Fixes applied:
- * - mouseOffset stored in ref (not state) → no stale-closure flicker on renderFrame
- * - Chunked frame loading (8 at a time) + IntersectionObserver gate → OOM safe
- * - ResizeObserver re-syncs canvas dimensions on window resize / device rotation
- * - handleMouseMove throttled with requestAnimationFrame
- * - Typography cues rendered one-at-a-time (active index) → no overlap bleed
+ * Fixes applied (v3):
+ * - Touch device detection: disables mouse parallax on touch screens (no mouse = no distortion)
+ * - Scroll track height: 250vh on mobile/touch, 150vh on desktop for controlled scrub feel
+ * - Scrub HUD: hidden on xs screens (< sm) to prevent canvas occlusion on phones
+ * - Typography cue: smaller headline font on mobile, subtext hidden on xs to reduce clutter
+ * - Location/era stamp: hidden below md breakpoint to avoid bottom-left overlap with cues
+ * - Parallax effect only fires when isTouchDevice is false
  */
+
+const isTouchDevice = () =>
+  typeof window !== 'undefined' &&
+  ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
 export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -21,6 +27,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const rafMouseRef = useRef(null);
   const rafScrollRef = useRef(null);
   const hasStartedLoadingRef = useRef(false);
+  const touchDevice = useRef(isTouchDevice());
 
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -31,7 +38,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const totalFrames = sequence.frameCount;
   const CHUNK_SIZE = 8;
 
-  // ── 1. Chunked Frame Loader — triggered by IntersectionObserver ──────────
+  // ── 1. Chunked Frame Loader ───────────────────────────────────────────────
   const loadChunk = useCallback((startIdx) => {
     const end = Math.min(startIdx + CHUNK_SIZE, totalFrames);
     const promises = [];
@@ -56,7 +63,6 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
 
     Promise.all(promises).then(() => {
       if (end < totalFrames) {
-        // Small yield so we don't block the main thread between chunks
         setTimeout(() => loadChunk(end), 16);
       }
     });
@@ -69,7 +75,6 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
     setIsLoaded(false);
     setLoadPercent(0);
 
-    // Gate frame loading behind IntersectionObserver — don't fetch if off-screen
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasStartedLoadingRef.current) {
@@ -78,14 +83,14 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '400px' }
     );
 
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [sequence, totalFrames, loadChunk]);
 
-  // ── 2. renderFrame — uses mouseOffsetRef (stable, no stale closure) ───────
+  // ── 2. renderFrame ────────────────────────────────────────────────────────
   const renderFrame = useCallback((frameIdx) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -94,7 +99,6 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
 
     let img = framesRef.current[frameIdx];
     if (!img) {
-      // Fallback: find nearest loaded frame
       for (let offset = 1; offset < totalFrames; offset++) {
         if (frameIdx - offset >= 0 && framesRef.current[frameIdx - offset]) {
           img = framesRef.current[frameIdx - offset]; break;
@@ -137,16 +141,15 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
       offsetY = 0;
     }
 
-    // Read parallax from ref (no stale closure issue)
-    const { x, y } = mouseOffsetRef.current;
-    const parallaxX = x * 8;
-    const parallaxY = y * 8;
+    // Only apply parallax on non-touch devices
+    const px = touchDevice.current ? 0 : mouseOffsetRef.current.x * 8;
+    const py = touchDevice.current ? 0 : mouseOffsetRef.current.y * 8;
 
-    ctx.drawImage(img, offsetX + parallaxX, offsetY + parallaxY, renderW, renderH);
+    ctx.drawImage(img, offsetX + px, offsetY + py, renderW, renderH);
     ctx.restore();
   }, [totalFrames]);
 
-  // ── 3. ResizeObserver — re-render on canvas size change ──────────────────
+  // ── 3. ResizeObserver ─────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -168,7 +171,6 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
       const targetFrame = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
 
-      // Determine active cue (single active index — no overlap)
       const cues = sequence.typographyCues;
       let nextCueIdx = activeCueIndex;
       for (let i = 0; i < cues.length; i++) {
@@ -197,8 +199,9 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
     };
   }, [totalFrames, sequence, renderFrame, onProgressUpdate]); // eslint-disable-line
 
-  // ── 5. Mouse parallax — throttled via rAF ────────────────────────────────
+  // ── 5. Mouse parallax — desktop only ─────────────────────────────────────
   const handleMouseMove = useCallback((e) => {
+    if (touchDevice.current) return;
     mouseOffsetRef.current = {
       x: (e.clientX / window.innerWidth - 0.5) * 2,
       y: (e.clientY / window.innerHeight - 0.5) * 2,
@@ -213,19 +216,22 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const cues = sequence.typographyCues;
 
   const posClass = (pos) => ({
-    'bottom-left':   'bottom-20 left-6 md:left-10 max-w-lg text-left items-start',
-    'bottom-right':  'bottom-24 right-6 md:right-10 max-w-lg text-right items-end',
-    'top-left':      'top-24 left-6 md:left-10 max-w-lg text-left items-start',
-    'top-right':     'top-24 right-6 md:right-10 max-w-lg text-right items-end',
-    'center-left':   'top-1/2 -translate-y-1/2 left-6 md:left-10 max-w-lg text-left items-start',
-    'center-right':  'top-1/2 -translate-y-1/2 right-6 md:right-10 max-w-lg text-right items-end',
-    'bottom-center': 'bottom-24 left-1/2 -translate-x-1/2 max-w-xl text-center items-center',
-  }[pos] || 'bottom-20 left-10 max-w-lg text-left items-start');
+    'bottom-left':   'bottom-20 left-4 md:left-10 max-w-[85vw] md:max-w-lg text-left items-start',
+    'bottom-right':  'bottom-24 right-4 md:right-10 max-w-[85vw] md:max-w-lg text-right items-end',
+    'top-left':      'top-24 left-4 md:left-10 max-w-[85vw] md:max-w-lg text-left items-start',
+    'top-right':     'top-24 right-4 md:right-10 max-w-[85vw] md:max-w-lg text-right items-end',
+    'center-left':   'top-1/2 -translate-y-1/2 left-4 md:left-10 max-w-[85vw] md:max-w-lg text-left items-start',
+    'center-right':  'top-1/2 -translate-y-1/2 right-4 md:right-10 max-w-[85vw] md:max-w-lg text-right items-end',
+    'bottom-center': 'bottom-24 left-1/2 -translate-x-1/2 max-w-[90vw] md:max-w-xl text-center items-center',
+  }[pos] || 'bottom-20 left-4 md:left-10 max-w-[85vw] md:max-w-lg text-left items-start');
+
+  // Taller scroll track on touch/mobile so thumb swipes feel controlled
+  const scrollTrackHeight = touchDevice.current ? 'h-[250vh]' : 'h-[150vh]';
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[150vh] bg-vintage-deepInk select-none"
+      className={`relative w-full ${scrollTrackHeight} bg-vintage-deepInk select-none`}
       onMouseMove={handleMouseMove}
       id={sequence.id}
     >
@@ -240,12 +246,12 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
         <div className="vintage-vignette" />
 
         {/* Top HUD */}
-        <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20 pointer-events-none text-xs font-mono tracking-widest uppercase">
-          <div className="flex items-center gap-3 bg-vintage-deepInk/90 backdrop-blur-md px-4 py-1.5 rounded-lg border border-vintage-charcoal shadow-xl text-vintage-paper">
+        <div className="absolute top-6 left-4 right-4 md:left-6 md:right-6 flex items-center justify-between z-20 pointer-events-none text-xs font-mono tracking-widest uppercase">
+          <div className="flex items-center gap-2 md:gap-3 bg-vintage-deepInk/90 backdrop-blur-md px-3 md:px-4 py-1.5 rounded-lg border border-vintage-charcoal shadow-xl text-vintage-paper">
             <span className="inline-block w-2 h-2 rounded-full bg-bronze animate-pulse" />
             <span className="font-bold text-bronze">ACT {sequence.chapterNumber}</span>
             <span className="text-vintage-sepia">/</span>
-            <span className="text-vintage-sand">{sequence.title}</span>
+            <span className="text-vintage-sand hidden sm:inline">{sequence.title}</span>
           </div>
 
           <div className="hidden md:flex items-center gap-4 bg-vintage-deepInk/90 backdrop-blur-md px-4 py-1.5 rounded-lg border border-vintage-charcoal text-vintage-sand">
@@ -258,8 +264,8 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           </div>
         </div>
 
-        {/* Bottom Left Location & Era Stamp */}
-        <div className="absolute bottom-6 left-6 md:left-10 z-20 pointer-events-none">
+        {/* Bottom Left Location & Era Stamp — hidden on mobile to avoid overlap with cues */}
+        <div className="absolute bottom-6 left-4 md:left-10 z-20 pointer-events-none hidden md:block">
           <div className="flex items-center gap-2 text-[11px] font-mono tracking-widest text-bronze uppercase mb-1 font-bold">
             <Compass className="w-3.5 h-3.5" />
             <span>{sequence.location}</span>
@@ -284,22 +290,22 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
                   : 'opacity-0 translate-y-4 blur-sm scale-95'
               }`}
             >
-              <div className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-bronze uppercase mb-2 bg-vintage-deepInk/95 backdrop-blur-md px-3.5 py-1 rounded-lg w-max border border-bronze/40 shadow-xl font-semibold">
+              <div className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-bronze uppercase mb-2 bg-vintage-deepInk/95 backdrop-blur-md px-3 py-1 rounded-lg w-max border border-bronze/40 shadow-xl font-semibold">
                 <Sparkles className="w-3 h-3 text-bronze" />
                 <span>{cue.tag}</span>
               </div>
-              <h3 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-vintage-paper tracking-tight leading-none drop-shadow-2xl mb-3">
+              <h3 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-vintage-paper tracking-tight leading-none drop-shadow-2xl mb-2 md:mb-3">
                 {cue.headline}
               </h3>
-              <p className="text-sm md:text-base font-serif text-vintage-sand leading-relaxed max-w-md bg-vintage-deepInk/85 backdrop-blur-sm p-4 rounded-lg border-l-2 border-bronze shadow-xl">
+              <p className="hidden sm:block text-sm md:text-base font-serif text-vintage-sand leading-relaxed max-w-md bg-vintage-deepInk/85 backdrop-blur-sm p-3 md:p-4 rounded-lg border-l-2 border-bronze shadow-xl">
                 {cue.subtext}
               </p>
             </div>
           );
         })}
 
-        {/* Bottom-Right Scrub HUD — also covers bottom-right corner watermark area */}
-        <div className="absolute bottom-5 right-5 md:right-8 z-30 pointer-events-auto min-w-[240px] sm:min-w-[270px] bg-vintage-deepInk border border-bronze/70 rounded-lg p-3 shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
+        {/* Scrub HUD — hidden on mobile phones, visible from sm upward */}
+        <div className="absolute bottom-5 right-4 md:right-8 z-30 pointer-events-auto hidden sm:block min-w-[220px] md:min-w-[260px] bg-vintage-deepInk border border-bronze/70 rounded-lg p-3 shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
           <div className="flex items-center justify-between text-[10px] font-mono uppercase text-vintage-sand mb-2 pb-1.5 border-b border-vintage-charcoal">
             <span className="flex items-center gap-1.5 text-bronze font-bold">
               <Film className="w-3 h-3 text-bronze" />
