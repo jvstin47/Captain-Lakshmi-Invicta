@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Shield, Sparkles, Award, FileText, ChevronRight, Users, Compass, BookOpen } from 'lucide-react';
+import React from 'react';
+import { Shield, Award, FileText, ChevronRight, Users, Compass, BookOpen } from 'lucide-react';
 
 export default function Chapter06ArchivalHub({ onOpenArchivalModal }) {
   return (
@@ -128,14 +128,14 @@ export default function Chapter06ArchivalHub({ onOpenArchivalModal }) {
               </button>
             </div>
 
-            {/* Seamless Sequence Plug-in Notice for Chapter 06 */}
+            {/* Archival Context Note */}
             <div className="p-5 rounded-lg bg-vintage-deepInk/80 border border-khaki text-xs font-mono">
               <div className="flex items-center gap-2 text-bronze mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="font-bold uppercase">CINEMATIC PIPELINE READY</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span className="font-bold uppercase">Historical Record // Azad Hind</span>
               </div>
               <p className="text-vintage-tan text-[11px] leading-relaxed">
-                Sequence frame pipeline is architected to automatically bind Chapter 06 cinematic render as soon as footage is deployed.
+                The Rani of Jhansi Regiment was formally constituted on 22 October 1943, one day after the proclamation of the Provisional Government of Free India. Captain Lakshmi was simultaneously inducted as Minister of Women's Affairs.
               </p>
             </div>
 

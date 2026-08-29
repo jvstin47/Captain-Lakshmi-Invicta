@@ -102,8 +102,18 @@ export const ARCHIVAL_EXHIBITS = [
     year: "1962",
     location: "Civil Lines, Kanpur",
     type: "PRIMARY CLINICAL RECORD",
-    caption: "Handwritten medical register from Dr. Lakshmi Sahgal\'s Kanpur clinic, documenting prenatal care and typhoid treatments for mill families.",
+    caption: "Handwritten medical register from Dr. Lakshmi Sahgal's Kanpur clinic, documenting prenatal care and typhoid treatments for mill families.",
     source: "Sahgal Family Personal Archive & GSVM Medical Heritage",
     significance: "Tangible proof of her unconditional 50-year commitment to providing medicine to the most vulnerable without commercial motive."
+  },
+  {
+    id: "arch-05",
+    title: "Dr. Lakshmi Sahgal's Living Will & Body Donation Certificate",
+    year: "2012",
+    location: "GSVM Medical College, Kanpur",
+    type: "PRIMARY LEGAL DOCUMENT",
+    caption: "The notarized living will in which Dr. Lakshmi Sahgal instructed that her body and corneas be donated to GSVM Medical College for medical education and research.",
+    source: "GSVM Medical College Heritage Archive, Kanpur",
+    significance: "An act that transformed her death into a final gift to medical science — an unbroken oath of service that continued beyond her last breath."
   }
 ];

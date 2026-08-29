@@ -79,7 +79,7 @@ export default function Navigation({ activeChapterId }) {
             </button>
 
             <button 
-              onClick={() => scrollToSection('chapter-06-hub')}
+              onClick={() => scrollToSection('seq-06-commander')}
               className="hidden sm:inline-flex items-center gap-1.5 text-vintage-sand hover:text-bronze transition-colors"
             >
               <Shield className="w-3.5 h-3.5 text-bronze" />
@@ -122,25 +122,11 @@ export default function Navigation({ activeChapterId }) {
               {ALL_CHAPTERS.map((ch) => (
                 <div 
                   key={ch.id}
-                  onClick={() => {
-                    if (ch.hasClip && ch.sequenceId) {
-                      scrollToSection(ch.sequenceId);
-                    } else if (ch.isArchivalHub) {
-                      scrollToSection('chapter-06-hub');
-                    } else {
-                      scrollToSection('roadmap-section');
-                    }
-                  }}
-                  className={`group p-4 rounded-lg border transition-all cursor-pointer ${
-                    ch.hasClip 
-                      ? 'bg-vintage-charcoal/70 border-vintage-slate hover:border-bronze hover:bg-vintage-charcoal'
-                      : ch.isArchivalHub
-                      ? 'bg-bronze/10 border-bronze/50 hover:border-bronze hover:bg-bronze/20'
-                      : 'bg-vintage-deepInk/60 border-vintage-charcoal/50 opacity-60 hover:opacity-100 hover:border-vintage-slate'
-                  }`}
+                  onClick={() => ch.sequenceId && scrollToSection(ch.sequenceId)}
+                  className="group p-4 rounded-lg border transition-all cursor-pointer bg-vintage-charcoal/70 border-vintage-slate hover:border-bronze hover:bg-vintage-charcoal"
                 >
                   <div className="flex items-center justify-between text-xs font-mono mb-2">
-                    <span className={`font-bold ${ch.hasClip || ch.isArchivalHub ? 'text-bronze' : 'text-vintage-sepia'}`}>
+                    <span className="font-bold text-bronze">
                       ACT {ch.number}
                     </span>
                     <span className="text-vintage-tan text-[11px]">{ch.year}</span>
@@ -151,18 +137,10 @@ export default function Navigation({ activeChapterId }) {
                   <p className="text-xs font-serif text-vintage-sand line-clamp-1">
                     {ch.subtitle}
                   </p>
-                  <div className="mt-3 flex items-center justify-between text-[10px] font-mono uppercase">
-                    {ch.hasClip ? (
-                      <span className="text-bronze flex items-center gap-1">
-                        <Sparkles className="w-2.5 h-2.5" /> RECONSTRUCTED SCENE
-                      </span>
-                    ) : ch.isArchivalHub ? (
-                      <span className="text-bronze flex items-center gap-1 font-semibold">
-                        <BookOpen className="w-2.5 h-2.5" /> ARCHIVAL HUB
-                      </span>
-                    ) : (
-                      <span className="text-vintage-sepia">PIPELINE STANDBY</span>
-                    )}
+                  <div className="mt-3 flex items-center text-[10px] font-mono uppercase">
+                    <span className="text-bronze flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" /> RECONSTRUCTED SCENE
+                    </span>
                   </div>
                 </div>
               ))}
