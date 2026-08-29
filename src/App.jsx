@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SEQUENCES } from './data/sequencesData';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -11,10 +11,13 @@ import LifePortfolioGrid from './components/LifePortfolioGrid';
 import FutureChaptersRoadmap from './components/FutureChaptersRoadmap';
 import ArchivalModal from './components/ArchivalModal';
 import Footer from './components/Footer';
+import { Play, Pause } from 'lucide-react';
 
 export default function App() {
   const [activeChapterId, setActiveChapterId] = useState(SEQUENCES[0].id);
   const [selectedExhibitId, setSelectedExhibitId] = useState(null);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const rafAutoScrollRef = useRef(null);
 
   const handleProgressUpdate = (seqId, progress) => {
     if (progress > 0.1 && progress < 0.95) {
@@ -30,6 +33,74 @@ export default function App() {
     setSelectedExhibitId(null);
   };
 
+  // ── Auto Scroll Engine ──────────────────────────────────────────────────
+  // Calibrated to 1.25px per frame (~75px/sec) for natural reading and frame scrub
+  const scrollStep = useCallback(() => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY >= maxScroll - 5) {
+      setIsAutoScrolling(false);
+      return;
+    }
+
+    window.scrollBy({ top: 1.25, behavior: 'auto' });
+    rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
+  }, []);
+
+  const startAutoScroll = useCallback(() => {
+    setIsAutoScrolling(true);
+    // If currently at top hero, start scrolling smoothly into act 1
+    if (window.scrollY < 200) {
+      const firstSeq = document.getElementById('seq-01-origins');
+      if (firstSeq) {
+        firstSeq.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, []);
+
+  const stopAutoScroll = useCallback(() => {
+    setIsAutoScrolling(false);
+    if (rafAutoScrollRef.current) {
+      cancelAnimationFrame(rafAutoScrollRef.current);
+    }
+  }, []);
+
+  const toggleAutoScroll = useCallback(() => {
+    if (isAutoScrolling) {
+      stopAutoScroll();
+    } else {
+      startAutoScroll();
+    }
+  }, [isAutoScrolling, startAutoScroll, stopAutoScroll]);
+
+  // Effect to run the continuous rAF loop when isAutoScrolling is true
+  useEffect(() => {
+    if (isAutoScrolling) {
+      rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
+    } else if (rafAutoScrollRef.current) {
+      cancelAnimationFrame(rafAutoScrollRef.current);
+    }
+    return () => {
+      if (rafAutoScrollRef.current) cancelAnimationFrame(rafAutoScrollRef.current);
+    };
+  }, [isAutoScrolling, scrollStep]);
+
+  // User interruption listeners: stop auto-scroll if user manually wheels or touches
+  useEffect(() => {
+    if (!isAutoScrolling) return;
+
+    const handleUserInterrupt = () => {
+      stopAutoScroll();
+    };
+
+    window.addEventListener('wheel', handleUserInterrupt, { passive: true });
+    window.addEventListener('touchmove', handleUserInterrupt, { passive: true });
+
+    return () => {
+      window.removeEventListener('wheel', handleUserInterrupt);
+      window.removeEventListener('touchmove', handleUserInterrupt);
+    };
+  }, [isAutoScrolling, stopAutoScroll]);
+
   return (
     <div className="relative min-h-screen bg-vintage-deepInk text-vintage-paper overflow-x-hidden selection:bg-bronze selection:text-vintage-deepInk">
       
@@ -39,10 +110,15 @@ export default function App() {
       {/* Persistent Minimal Editorial Navigation */}
       <Navigation 
         activeChapterId={activeChapterId}
+        isAutoScrolling={isAutoScrolling}
+        onToggleAutoScroll={toggleAutoScroll}
       />
 
       {/* Hero Section with Archival Photo Carousel */}
-      <Hero />
+      <Hero 
+        isAutoScrolling={isAutoScrolling}
+        onToggleAutoScroll={toggleAutoScroll}
+      />
 
       {/* Required Historical Reconstruction Disclaimer Notice */}
       <DisclaimerBanner />
@@ -83,6 +159,23 @@ export default function App() {
       {/* Bibliography, Citations & Archival Footer */}
       <Footer />
 
+      {/* Floating Auto-Scroll Toast Indicator */}
+      {isAutoScrolling && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fadeIn">
+          <button
+            onClick={stopAutoScroll}
+            className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-vintage-deepInk/95 border border-bronze text-vintage-paper shadow-[0_0_25px_rgba(192,130,105,0.4)] backdrop-blur-md text-xs font-mono tracking-widest uppercase hover:bg-bronze hover:text-vintage-deepInk transition-all group"
+          >
+            <span className="w-2 h-2 rounded-full bg-bronze group-hover:bg-vintage-deepInk animate-pulse" />
+            <span>AUTO TOUR ACTIVE</span>
+            <span className="text-vintage-sepia group-hover:text-vintage-charcoal">•</span>
+            <span className="flex items-center gap-1 text-vintage-tan group-hover:text-vintage-deepInk">
+              <Pause className="w-3.5 h-3.5" /> PAUSE
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* Museum Deep-Inspection Archival Modal */}
       {selectedExhibitId && (
         <ArchivalModal 
@@ -94,3 +187,4 @@ export default function App() {
     </div>
   );
 }
+

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, BookOpen, Clock, Award, Shield, Sparkles } from 'lucide-react';
+import { Menu, X, BookOpen, Clock, Award, Shield, Sparkles, Play, Pause } from 'lucide-react';
 import { SEQUENCES, ALL_CHAPTERS } from '../data/sequencesData';
 
-export default function Navigation({ activeChapterId }) {
+export default function Navigation({ activeChapterId, isAutoScrolling, onToggleAutoScroll }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -61,7 +61,31 @@ export default function Navigation({ activeChapterId }) {
           </div>
 
           {/* Right Navigation Controls */}
-          <div className="flex items-center gap-4 md:gap-6 text-xs font-mono tracking-widest uppercase">
+          <div className="flex items-center gap-3 md:gap-5 text-xs font-mono tracking-widest uppercase">
+            
+            {/* Auto Tour Play/Pause Toggle */}
+            <button
+              onClick={onToggleAutoScroll}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded transition-all text-xs font-semibold shadow ${
+                isAutoScrolling
+                  ? 'bg-bronze text-vintage-deepInk border border-bronze-light shadow-[0_0_15px_rgba(192,130,105,0.5)]'
+                  : 'bg-vintage-charcoal/80 border border-vintage-slate/90 text-vintage-sand hover:border-bronze hover:text-bronze'
+              }`}
+              title={isAutoScrolling ? 'Pause automatic scroll tour' : 'Start automatic scroll tour at comfortable reading pace'}
+            >
+              {isAutoScrolling ? (
+                <>
+                  <Pause className="w-3.5 h-3.5 animate-pulse" />
+                  <span className="hidden sm:inline">PAUSE TOUR</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3.5 h-3.5 text-bronze" />
+                  <span className="hidden sm:inline">AUTO TOUR</span>
+                </>
+              )}
+            </button>
+
             <button 
               onClick={() => scrollToSection('timeline-section')}
               className="hidden md:inline-flex items-center gap-1.5 text-vintage-sand hover:text-bronze transition-colors"

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, Image, Shield, HeartPulse, History, Sparkles, Camera } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, Image, Shield, HeartPulse, History, Sparkles, Camera, Play, Pause } from 'lucide-react';
 import { HERO_ARCHIVAL_PHOTOS } from '../data/heroPhotosData';
 
-export default function Hero({ onOpenPhotoModal }) {
+export default function Hero({ isAutoScrolling, onToggleAutoScroll }) {
   const carouselRef = useRef(null);
   const [imageErrors, setImageErrors] = useState({});
 
@@ -193,13 +193,38 @@ export default function Hero({ onOpenPhotoModal }) {
           <span>MADRAS PRESIDENCY (1914)</span>
         </div>
 
-        <button 
-          onClick={scrollToFirstSequence}
-          className="group flex items-center gap-3 px-6 py-2 rounded-full bg-vintage-charcoal border border-bronze/50 hover:border-bronze text-vintage-paper hover:text-bronze text-xs font-mono tracking-widest uppercase transition-all shadow-lg"
-        >
-          <span>ENTER THE RECONSTRUCTION</span>
-          <ChevronDown className="w-4 h-4 text-bronze group-hover:translate-y-1 transition-transform" />
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Auto Tour Button */}
+          <button
+            onClick={onToggleAutoScroll}
+            className={`flex items-center gap-2 px-5 py-2 rounded-full border text-xs font-mono tracking-widest uppercase transition-all shadow-lg ${
+              isAutoScrolling
+                ? 'bg-bronze text-vintage-deepInk border-bronze-light font-bold shadow-[0_0_20px_rgba(192,130,105,0.4)]'
+                : 'bg-vintage-deepInk border-bronze/50 hover:border-bronze text-bronze hover:bg-bronze/10'
+            }`}
+          >
+            {isAutoScrolling ? (
+              <>
+                <Pause className="w-3.5 h-3.5 animate-pulse" />
+                <span>PAUSE AUTO TOUR</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5" />
+                <span>START AUTO TOUR</span>
+              </>
+            )}
+          </button>
+
+          {/* Manual Enter Button */}
+          <button 
+            onClick={scrollToFirstSequence}
+            className="group flex items-center gap-3 px-6 py-2 rounded-full bg-vintage-charcoal border border-bronze/50 hover:border-bronze text-vintage-paper hover:text-bronze text-xs font-mono tracking-widest uppercase transition-all shadow-lg"
+          >
+            <span>ENTER STORY</span>
+            <ChevronDown className="w-4 h-4 text-bronze group-hover:translate-y-1 transition-transform" />
+          </button>
+        </div>
 
       </div>
 
