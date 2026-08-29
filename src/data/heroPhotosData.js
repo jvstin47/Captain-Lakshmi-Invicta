@@ -10,61 +10,61 @@ export const HERO_ARCHIVAL_PHOTOS = [
     title: "Captain Lakshmi in INA Uniform",
     year: "1943",
     location: "Singapore",
-    caption: "Official military portrait as Commander of the Rani of Jhansi Regiment and Minister of Women\'s Affairs, Azad Hind Fauj.",
-    source: "National Archives of India / Netaji Research Bureau"
+    caption: "Official military portrait as Commander of the Rani of Jhansi Regiment and Minister of Women's Affairs, Azad Hind Fauj.",
+    source: "National Archives of India / Wikimedia Commons"
   },
   {
     id: "arch-photo-02",
     filename: "/archival_photos/photo_02.jpg",
     title: "Reviewing the Regiment with Netaji",
     year: "1943",
-    location: "Serangoon Camp, Singapore",
+    location: "Singapore",
     caption: "Subhas Chandra Bose and Captain Lakshmi reviewing armed women recruits holding Lee-Enfield rifles during parade drill.",
-    source: "Imperial War Museum / INA Historical Collection"
+    source: "INA Historical Collection / Wikimedia Commons"
   },
   {
     id: "arch-photo-03",
     filename: "/archival_photos/photo_03.jpg",
-    title: "Madras Medical College Convocation",
-    year: "1938",
-    location: "Madras",
-    caption: "Dr. Lakshmi Swaminathan upon receiving her MBBS degree from Madras Medical College.",
-    source: "Madras Medical College Archives"
+    title: "Lakshmi Swaminathan Press Portrait",
+    year: "1945",
+    location: "Madras / Delhi",
+    caption: "Historical newspaper portrait of Capt. Lakshmi during the nationwide mobilization and INA trials era.",
+    source: "Press Information Archive / Wikimedia Commons"
   },
   {
     id: "arch-photo-04",
     filename: "/archival_photos/photo_04.jpg",
-    title: "Return to India & Public Welcome",
-    year: "1946",
-    location: "New Delhi",
-    caption: "Mass reception in Delhi following her release from British military custody after the Burma campaign.",
-    source: "Photo Division, Ministry of Information & Broadcasting"
+    title: "Captain Lakshmi Saluting on Duty",
+    year: "1943",
+    location: "Singapore",
+    caption: "Captain Lakshmi Sahgal rendering a military salute in full Azad Hind service uniform.",
+    source: "The Hindu Historical Archives / INA Records"
   },
   {
     id: "arch-photo-05",
     filename: "/archival_photos/photo_05.jpg",
-    title: "The Kanpur Free Clinic",
-    year: "c. 1975",
-    location: "Civil Lines, Kanpur",
-    caption: "Dr. Lakshmi Sahgal examining a working-class patient in her modest clinical practice.",
-    source: "Sahgal Family Personal Archive"
+    title: "Netaji & Officers of Azad Hind Fauj",
+    year: "1943",
+    location: "Singapore",
+    caption: "Netaji Subhas Chandra Bose seated with INA command officers including Capt. Lakshmi and Col. Prem Kumar Sahgal.",
+    source: "Azad Hind Historical Collection"
   },
   {
     id: "arch-photo-06",
     filename: "/archival_photos/photo_06.jpg",
-    title: "Addressing Working Women\'s Convention",
-    year: "1981",
-    location: "Chennai",
-    caption: "Delivering the founding address at the All India Democratic Women\'s Association conference.",
-    source: "AIDWA National Archives"
+    title: "Dr. Lakshmi Sahgal in Later Years",
+    year: "c. 1990s",
+    location: "Kanpur",
+    caption: "Dr. Lakshmi Sahgal at a retrospective conference on her memoirs and decades of medical service in Kanpur.",
+    source: "Sahgal Family Personal Archive"
   },
   {
     id: "arch-photo-07",
     filename: "/archival_photos/photo_07.jpg",
-    title: "The 2002 Presidential Campaign",
-    year: "2002",
-    location: "Parliament House, New Delhi",
-    caption: "Standing as candidate for the Presidency of India to champion constitutional secularism and social rights.",
-    source: "Press Information Bureau"
+    title: "Democratic Convention & Public Life",
+    year: "2005",
+    location: "New Delhi",
+    caption: "Dr. Lakshmi Sahgal addressing delegates during national democratic conventions in New Delhi.",
+    source: "National Political Archives / Wikimedia Commons"
   }
 ];
