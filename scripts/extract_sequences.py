@@ -10,27 +10,27 @@ CLIPS = [
     {
         'id': 'seq-01-origins',
         'file': 'Teenage_girl_looking_through_window_202608290215.mp4',
-        'fps': 8,
+        'fps': 24,
     },
     {
         'id': 'seq-02-medicine',
         'file': 'Woman_studying_anatomy_at_desk_202608290214.mp4',
-        'fps': 8,
+        'fps': 24,
     },
     {
         'id': 'seq-03-calling',
         'file': 'Woman_doctor_walking_hospital_co…_202608290215.mp4',
-        'fps': 8,
+        'fps': 24,
     },
     {
         'id': 'seq-04-singapore',
         'file': 'Woman_doctor_in_medical_clinic_202608290214.mp4',
-        'fps': 7,
+        'fps': 24,
     },
     {
         'id': 'seq-05-clinic',
         'file': 'Doctor_examining_patient_in_clinic_202608290214.mp4',
-        'fps': 7,
+        'fps': 24,
     }
 ]
 

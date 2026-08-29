@@ -49,7 +49,7 @@ export default function Footer() {
             <div className="space-y-2 text-vintage-tan text-[11px]">
               <div>Framework: React 18 & Vite 5</div>
               <div>Renderer: Canvas Hardware-Accelerated Sequencer</div>
-              <div>Asset Pipeline: WebP 8fps Scrub Interpolation</div>
+              <div>Asset Pipeline: WebP 24fps Scrub Interpolation</div>
               <div>Watermark Removal: FFmpeg delogo inpaint</div>
               <div>Loading: IntersectionObserver + chunked preload</div>
               <div className="text-bronze pt-2 font-bold">Dynamic Vintage Narrative Theming</div>

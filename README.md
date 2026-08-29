@@ -64,9 +64,9 @@ The digital monograph is architected around a 14-chapter biographical continuum:
 ### 2. Automated Asset Pipeline & Watermark Inpainting (`scripts/extract_sequences.py`)
 * Source video clips are processed through a custom FFmpeg pipeline:
   ```bash
-  ffmpeg -i source.mp4 -vf "delogo=x=1670:y=830:w=180:h=160,fps=8,scale=1600:-1:flags=lanczos" -c:v libwebp -quality 82 out/frame_%03d.webp
+  ffmpeg -i source.mp4 -vf "delogo=x=1670:y=830:w=180:h=160,fps=24,scale=1600:-1:flags=lanczos" -c:v libwebp -quality 82 out/frame_%03d.webp
   ```
-* High-quality Lanczos scaling generates lightweight, high-fidelity WebP frames (~55KB/frame) while seamlessly inpainting synthetic watermark artifacts at the asset level.
+* High-quality Lanczos scaling generates lightweight, high-fidelity WebP frames while seamlessly inpainting synthetic watermark artifacts at the asset level.
 
 ### 3. Broadsheet Daily Gazette Timeline (`HorizontalTimeline.jsx`)
 * **Authentic 1940s Newsprint Aesthetic:** Designed as *"THE HISTORICAL GAZETTE & DISPATCH"*, featuring drop-cap editorial typography, volume/issue datelines, and letterpress drop shadows.
