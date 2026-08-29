@@ -3,7 +3,6 @@
 # CAPTAIN LAKSHMI SAHGAL (1914–2012)
 ### *An Interactive Digital Monograph & Scroll-Driven Historical Documentary*
 
-[![ACM-W INVICTA](https://img.shields.io/badge/ACM--W-INVICTA%20Submission-c08269?style=for-the-badge)](https://github.com/jvstin47/Captain-Lakshmi-Invicta)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -23,9 +22,9 @@
 
 ## 📖 Executive Summary
 
-This project is an editorial-grade, digital museum monograph and interactive web documentary commemorating the life, military leadership, and medical humanitarianism of **Captain Lakshmi Sahgal (Dr. Lakshmi Swaminathan, 1914–2012)**.
+This digital archive is an editorial-grade, interactive museum monograph commemorating the life, military leadership, and medical humanitarianism of **Captain Lakshmi Sahgal (Dr. Lakshmi Swaminathan, 1914–2012)**.
 
-Built as an entry for the **ACM-W INVICTA** competition, the platform moves beyond conventional scrolling articles by introducing a **hardware-accelerated, scroll-driven cinematic frame sequencer**, contextualizing authentic historical archives with visual reconstructions of pre-independence India, colonial Singapore, wartime Burma, and post-independence public health activism.
+The platform moves beyond conventional scrolling articles by introducing a **hardware-accelerated, scroll-driven cinematic frame sequencer**, contextualizing authentic historical archives with visual reconstructions of pre-independence India, colonial Singapore, wartime Burma, and post-independence public health activism.
 
 ---
 
@@ -101,7 +100,7 @@ The digital monograph is architected around a 14-chapter biographical continuum:
 
 ---
 
-## 📂 Project Structure
+## 📂 Archive Architecture
 
 ```
 Invicta/
@@ -189,4 +188,4 @@ Invicta/
 
 ## 📄 License & Fair Use
 
-Developed for the **ACM-W INVICTA Competition**. Historical texts, dispatches, and quotes are in the public domain or referenced under Fair Use for educational and non-commercial historical preservation. Reconstructed visual scenes are proprietary to this presentation.
+Historical texts, dispatches, and quotes are in the public domain or referenced under Fair Use for educational and non-commercial historical preservation. Reconstructed visual scenes are proprietary to this presentation.

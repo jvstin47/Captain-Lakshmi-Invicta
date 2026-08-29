@@ -41,7 +41,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Submission Metadata */}
+          {/* Col 3: Platform Architecture */}
           <div className="md:col-span-3 text-xs font-mono">
             <div className="text-vintage-paper uppercase font-bold tracking-widest mb-4 pb-2 border-b border-vintage-charcoal">
               Architecture & Technology
@@ -61,7 +61,7 @@ export default function Footer() {
         {/* Bottom Credits */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-vintage-sepia">
           <div>
-            © 2026 Digital Monograph of Captain Lakshmi Sahgal — ACM-W INVICTA Submission
+            © 2026 Digital Monograph of Captain Lakshmi Sahgal
           </div>
           <div className="flex items-center gap-1">
             <span>Historical Truth • Reconstructed Atmosphere • Living Legacy</span>

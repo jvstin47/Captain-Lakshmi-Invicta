@@ -11,16 +11,16 @@ export default function LifePortfolioGrid() {
       <div className="max-w-7xl mx-auto">
         
         {/* Top Header */}
-        <div className="max-w-3xl mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-bronze uppercase mb-3 font-bold">
-            <Award className="w-4 h-4 text-bronze" />
-            <span>BIOGRAPHY PORTFOLIO // THE MULTIFACETED LIFE</span>
+        <div className="max-w-4xl mx-auto mb-12 md:mb-16 text-center">
+          <div className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-bronze uppercase mb-4 px-3 py-1 border border-bronze/40 rounded-full bg-vintage-charcoal/50">
+            <span className="w-1.5 h-1.5 rounded-full bg-bronze animate-pulse" />
+            <span>HISTORICAL RECORD // THE MULTIFACETED LIFE</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black text-vintage-paper uppercase tracking-tight leading-none mb-6">
-            The Dimensions of a Titan
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-vintage-paper tracking-tight leading-tight mb-4">
+            The Archival Dossier
           </h2>
-          <p className="text-base md:text-lg font-serif text-vintage-sand leading-relaxed">
-            She was never merely one thing. Across nearly a century, she inhabited the roles of healer, combat commander, political prisoner, humanitarian worker, and democratic voice without ever compromising her core principles.
+          <p className="text-sm md:text-base font-serif text-vintage-sand leading-relaxed max-w-2xl mx-auto">
+            Captain Lakshmi Sahgal’s legacy spans multiple disciplines, each defined by an unwavering commitment to the dispossessed. Select a facet of her life to examine the historical struggles and her lasting contributions.
           </p>
         </div>
 

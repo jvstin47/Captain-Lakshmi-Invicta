@@ -75,7 +75,7 @@ export default function Navigation({ activeChapterId }) {
               className="hidden md:inline-flex items-center gap-1.5 text-vintage-sand hover:text-bronze transition-colors"
             >
               <Award className="w-3.5 h-3.5 text-bronze" />
-              <span>Portfolio</span>
+              <span>The Record</span>
             </button>
 
             <button 
@@ -172,7 +172,7 @@ export default function Navigation({ activeChapterId }) {
             <div className="mt-12 pt-6 border-t border-vintage-charcoal flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-vintage-sand">
               <div className="flex items-center gap-6">
                 <button onClick={() => scrollToSection('timeline-section')} className="hover:text-bronze transition">Timeline (1914–2012)</button>
-                <button onClick={() => scrollToSection('portfolio-section')} className="hover:text-bronze transition">Life Portfolio</button>
+                <button onClick={() => scrollToSection('portfolio-section')} className="hover:text-bronze transition">The Record</button>
                 <button onClick={() => scrollToSection('roadmap-section')} className="hover:text-bronze transition">Future Acts</button>
                 <button onClick={() => scrollToSection('legacy-section')} className="hover:text-bronze transition">Sources & Citations</button>
               </div>

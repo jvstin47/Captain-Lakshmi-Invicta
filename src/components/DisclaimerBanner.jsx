@@ -3,7 +3,7 @@ import { Film, AlertTriangle } from 'lucide-react';
 
 /**
  * DisclaimerBanner — v2
- * Higher contrast, larger text, clearly legible for academic/competition context.
+ * Higher contrast, larger text, clearly legible for archival and historical context.
  */
 export default function DisclaimerBanner() {
   return (

@@ -60,7 +60,7 @@ export default function App() {
             <ChapterBridge 
               sequence={seq} 
               nextSequence={nextSeq}
-              onOpenArchivalModal={() => handleOpenArchivalModal('arch-01')}
+              onOpenArchivalModal={handleOpenArchivalModal}
             />
           </React.Fragment>
         );
@@ -74,13 +74,13 @@ export default function App() {
       {/* Pinned Chronological Cartography / Daily Broadsheet Newspaper Timeline */}
       <HorizontalTimeline />
 
-      {/* Multifaceted Life Portfolio Matrix */}
+      {/* Multifaceted Historical Record Matrix */}
       <LifePortfolioGrid />
 
       {/* Future Acts 07 to 14 Extension Architecture Roadmap */}
       <FutureChaptersRoadmap />
 
-      {/* Bibliography, Citations & Competition Footer */}
+      {/* Bibliography, Citations & Archival Footer */}
       <Footer />
 
       {/* Museum Deep-Inspection Archival Modal */}
