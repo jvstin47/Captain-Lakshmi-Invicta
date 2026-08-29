@@ -1,14 +1,18 @@
 import React from 'react';
-import { Film, Hourglass, ChevronRight } from 'lucide-react';
+import { Film, CheckCircle2, ChevronRight, Sparkles, Compass } from 'lucide-react';
 import { ALL_CHAPTERS } from '../data/sequencesData';
 
 /**
- * FutureChaptersRoadmap — v2
- * Reframed as an atmospheric editorial "The Story Continues" narrative teaser
- * rather than a placeholder grid of grey "PIPELINE STANDBY" cards.
+ * FutureChaptersRoadmap -> Archival Compendium
+ * Interactive directory indexing all 14 realized chapters with direct navigation.
  */
 export default function FutureChaptersRoadmap() {
-  const futureChapters = ALL_CHAPTERS.filter(c => c.isPlaceholder);
+  const scrollToChapter = (seqId) => {
+    const el = document.getElementById(seqId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section id="roadmap-section" className="relative py-20 md:py-28 px-6 md:px-12 bg-vintage-charcoal border-t border-bronze/20 text-vintage-paper overflow-hidden">
@@ -22,50 +26,55 @@ export default function FutureChaptersRoadmap() {
         {/* Editorial header */}
         <div className="max-w-4xl mb-16">
           <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-bronze uppercase mb-4 font-bold">
-            <Hourglass className="w-4 h-4 text-bronze" />
-            <span>THE STORY CONTINUES — ACTS 07 TO 14</span>
+            <Compass className="w-4 h-4 text-bronze" />
+            <span>ARCHIVAL COMPENDIUM // THE FOURTEEN ACTS</span>
           </div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black text-vintage-paper uppercase tracking-tight leading-[0.9] mb-6">
-            A Life That Would<br />
-            <span className="text-bronze">Not Stand Still</span>
+            The Complete<br />
+            <span className="text-bronze">Biographical Arc</span>
           </h2>
           <p className="text-base md:text-lg font-serif text-vintage-sand leading-relaxed max-w-2xl">
-            The march across Burma. The Red Fort trials. Fifty years treating the poor in Kanpur.
-            The Bhopal survivors. The 2002 Presidential race. Her story did not end with the war —
-            it deepened into something rarer still: a life of absolute, unbroken conviction.
+            From the quiet colonial balconies of 1914 Madras to the frontlines of Burma, 
+            the border crisis of 1971, and her final clinical examinations in Kanpur. 
+            All fourteen chronological chapters are digitally reconstructed with cinematic frame sequences.
           </p>
-          <p className="text-sm font-mono text-vintage-sepia mt-4 uppercase tracking-widest">
-            Additional cinematic reconstructions will be released as chapters activate.
+          <p className="text-xs font-mono text-vintage-sepia mt-4 uppercase tracking-widest flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            14 of 14 Reconstructed Chapters Active
           </p>
         </div>
 
-        {/* Chapter teaser list — editorial newspaper column style */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-vintage-charcoal/60 border border-vintage-slate/40 rounded-lg overflow-hidden">
-          {futureChapters.map((ch, idx) => (
+        {/* 14 Chapter Grid — editorial broadsheet style */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {ALL_CHAPTERS.map((ch) => (
             <div
               key={ch.id}
-              className="relative p-6 bg-vintage-deepInk/60 hover:bg-vintage-deepInk transition-colors duration-300 group"
+              onClick={() => ch.sequenceId && scrollToChapter(ch.sequenceId)}
+              className="relative p-6 bg-vintage-deepInk/80 hover:bg-vintage-deepInk border border-vintage-slate/50 hover:border-bronze/70 rounded-lg transition-all duration-300 group cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-0.5"
             >
               {/* Chapter number watermark */}
-              <div className="absolute top-4 right-4 text-5xl font-display font-black text-vintage-charcoal/60 leading-none select-none group-hover:text-bronze/10 transition-colors">
+              <div className="absolute top-4 right-4 text-4xl font-display font-black text-vintage-charcoal/80 leading-none select-none group-hover:text-bronze/15 transition-colors">
                 {ch.number}
               </div>
 
               <div className="relative z-10">
-                <div className="text-[10px] font-mono tracking-widest text-bronze/70 uppercase mb-2">
-                  {ch.year}
+                <div className="flex items-center justify-between text-[10px] font-mono tracking-widest text-bronze uppercase mb-2">
+                  <span>ACT {ch.number}</span>
+                  <span className="text-vintage-tan">{ch.year}</span>
                 </div>
-                <h3 className="text-base font-display font-bold text-vintage-sand group-hover:text-vintage-paper transition-colors mb-1 leading-tight">
+                
+                <h3 className="text-base font-display font-bold text-vintage-sand group-hover:text-vintage-paper transition-colors mb-1.5 leading-tight">
                   {ch.title}
                 </h3>
-                <p className="text-xs font-serif text-vintage-sepia leading-relaxed">
+                
+                <p className="text-xs font-serif text-vintage-sepia leading-relaxed line-clamp-2">
                   {ch.subtitle}
                 </p>
 
-                <div className="mt-4 flex items-center gap-1 text-[10px] font-mono text-vintage-sepia/50 uppercase group-hover:text-bronze/50 transition-colors">
-                  <Film className="w-3 h-3" />
-                  <span>In Production</span>
-                  <ChevronRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="mt-4 pt-3 border-t border-vintage-charcoal flex items-center gap-1.5 text-[10px] font-mono text-bronze/90 uppercase group-hover:text-bronze transition-colors">
+                  <Sparkles className="w-3 h-3 text-bronze" />
+                  <span>Interactive Scene</span>
+                  <ChevronRight className="w-3 h-3 ml-auto opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </div>
               </div>
             </div>

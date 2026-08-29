@@ -173,7 +173,7 @@ export default function Navigation({ activeChapterId }) {
               <div className="flex items-center gap-6">
                 <button onClick={() => scrollToSection('timeline-section')} className="hover:text-bronze transition">Timeline (1914–2012)</button>
                 <button onClick={() => scrollToSection('portfolio-section')} className="hover:text-bronze transition">The Record</button>
-                <button onClick={() => scrollToSection('roadmap-section')} className="hover:text-bronze transition">Future Acts</button>
+                <button onClick={() => scrollToSection('roadmap-section')} className="hover:text-bronze transition">All 14 Acts</button>
                 <button onClick={() => scrollToSection('legacy-section')} className="hover:text-bronze transition">Sources & Citations</button>
               </div>
               <div className="text-vintage-sepia text-[11px]">

@@ -106,12 +106,21 @@ The digital monograph is architected around a 14-chapter biographical continuum:
 Invicta/
 ├── public/
 │   ├── archival_photos/        # Authentic historical photographs (photo_01 to photo_07)
-│   └── sequences/              # Reconstructed WebP frame sequences
-│       ├── seq-01-origins/     # Act 01 (64 frames)
-│       ├── seq-02-medicine/    # Act 02 (64 frames)
-│       ├── seq-03-calling/     # Act 03 (64 frames)
-│       ├── seq-04-singapore/   # Act 04 (70 frames)
-│       └── seq-05-clinic/      # Act 05 (70 frames)
+│   └── sequences/              # Reconstructed WebP frame sequences (24fps)
+│       ├── seq-01-origins/     # Act 01: The Awakening (192 frames)
+│       ├── seq-02-medicine/    # Act 02: The Science of Healing (192 frames)
+│       ├── seq-03-calling/     # Act 03: The Healer's Oath (192 frames)
+│       ├── seq-04-singapore/   # Act 04: Crossroads in Malaya (240 frames)
+│       ├── seq-05-clinic/      # Act 05: Clinic of the Dispossessed (240 frames)
+│       ├── seq-06-commander/   # Act 06: The Commander (240 frames)
+│       ├── seq-07-burma/       # Act 07: The Burma March (240 frames)
+│       ├── seq-08-jungle/      # Act 08: The Jungle Retreat (240 frames)
+│       ├── seq-09-trial/       # Act 09: Trial & Return (240 frames)
+│       ├── seq-10-kanpur/      # Act 10: Kanpur: 50 Years of Care (240 frames)
+│       ├── seq-11-refugee/     # Act 11: 1971 Refugee Camps (240 frames)
+│       ├── seq-12-activist/    # Act 12: Frontline Activist (240 frames)
+│       ├── seq-13-candidate/   # Act 13: The People's Candidate (240 frames)
+│       └── seq-14-legacy/      # Act 14: The Living Legacy (240 frames)
 ├── scripts/
 │   └── extract_sequences.py    # FFmpeg frame extraction & watermark inpainting pipeline
 ├── src/

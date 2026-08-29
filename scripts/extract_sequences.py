@@ -66,6 +66,16 @@ CLIPS = [
         'id': 'seq-12-activist',
         'file': 'Physician_examines_patient_in_cl…_202608291923.mp4',
         'fps': 24,
+    },
+    {
+        'id': 'seq-13-candidate',
+        'file': 'Woman_campaigning_in_public_gath…_202608292309.mp4',
+        'fps': 24,
+    },
+    {
+        'id': 'seq-14-legacy',
+        'file': 'Elderly_woman_reviewing_personal…_1080p_202608292309.mp4',
+        'fps': 24,
     }
 ]
 
