@@ -25,19 +25,19 @@ export default function App() {
     setIsSequenceLocked(locked);
   }, []);
 
-  const handleProgressUpdate = (seqId, progress) => {
+  const handleProgressUpdate = useCallback((seqId, progress) => {
     if (progress > 0.1 && progress < 0.95) {
-      setActiveChapterId(seqId);
+      setActiveChapterId(prev => (prev === seqId ? prev : seqId));
     }
-  };
+  }, []);
 
-  const handleOpenArchivalModal = (id) => {
+  const handleOpenArchivalModal = useCallback((id) => {
     setSelectedExhibitId(id || 'arch-01');
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedExhibitId(null);
-  };
+  }, []);
 
   // ── Auto Scroll Engine ──────────────────────────────────────────────────
   // Calibrated to 1.25px per frame (~75px/sec) for natural reading and frame scrub

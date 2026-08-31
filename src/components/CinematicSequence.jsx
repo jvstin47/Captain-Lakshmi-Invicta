@@ -2,18 +2,12 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Compass, Film, Sparkles, Lock, Unlock, RotateCcw, FastForward } from 'lucide-react';
 
 /**
- * CinematicSequence Engine — v5 (Flawless Scroll-Locked Auto-Cycle)
+ * CinematicSequence Engine — v6 (Robust Frame Playback & Scroll Locking)
  *
- * How it works:
- * 1. Preloads initial frames eagerly so sequences never play blank.
- * 2. When the user scrolls down to a sequence and it enters the viewport (top ~ 0),
- *    the sequence aligns to screen and engages scroll lock.
- * 3. Scroll lock intercepts wheel, touchmove, and keys (WITHOUT mutating body overflow),
- *    keeping scroll position firmly pinned and preventing layout shifts/browser bugs.
- * 4. The sequence plays through all frames from 0% to 100% at ~32 FPS.
- * 5. Upon reaching 100%, scroll lock is immediately released, allowing the user
- *    to freely scroll down to the next chapter and next sequence.
- * 6. Includes Skip and Replay controls.
+ * Guarantees:
+ * 1. Frame preloading starts immediately and never gets wiped by re-renders.
+ * 2. Playback runs on a continuous rAF loop decoupled from React state/props churn.
+ * 3. Page scroll is safely locked on arrival and strictly unlocked upon 100% completion.
  */
 
 const isTouchDevice = () =>
@@ -29,11 +23,15 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
   const currentFrameRef = useRef(0);
   const rafMouseRef = useRef(null);
   const rafPlayRef = useRef(null);
-  const hasStartedLoadingRef = useRef(false);
   const isPlayingRef = useRef(false);
   const hasPlayedRef = useRef(false);
-  const lockedScrollYRef = useRef(0);
   const touchDevice = useRef(isTouchDevice());
+
+  // Ref-isolate callbacks to prevent dependency churn from resetting animation
+  const onProgressUpdateRef = useRef(onProgressUpdate);
+  onProgressUpdateRef.current = onProgressUpdate;
+  const onLockChangeRef = useRef(onLockChange);
+  onLockChangeRef.current = onLockChange;
 
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -46,52 +44,10 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
 
   const totalFrames = sequence.frameCount;
   const CHUNK_SIZE = 16;
-  const TARGET_FPS = 32;
+  const TARGET_FPS = 30;
   const PLAYBACK_DURATION_MS = (totalFrames / TARGET_FPS) * 1000;
 
-  // ── 1. Chunked Frame Preloader ────────────────────────────────────────────
-  const loadChunk = useCallback((startIdx) => {
-    const end = Math.min(startIdx + CHUNK_SIZE, totalFrames);
-    const promises = [];
-
-    for (let i = startIdx; i < end; i++) {
-      promises.push(new Promise((resolve) => {
-        const img = new Image();
-        const frameNum = String(i + 1).padStart(3, '0');
-        img.src = `${sequence.framePath}/${sequence.framePrefix}${frameNum}.${sequence.frameExtension}`;
-        img.onload = () => {
-          framesRef.current[i] = img;
-          loadedCountRef.current += 1;
-          const pct = Math.round((loadedCountRef.current / totalFrames) * 100);
-          setLoadPercent(pct);
-          if (i === 0 && canvasRef.current) renderFrame(0);
-          if (loadedCountRef.current === totalFrames) setIsLoaded(true);
-          resolve();
-        };
-        img.onerror = resolve;
-      }));
-    }
-
-    Promise.all(promises).then(() => {
-      if (end < totalFrames) {
-        setTimeout(() => loadChunk(end), 12);
-      }
-    });
-  }, [sequence, totalFrames]); // eslint-disable-line
-
-  useEffect(() => {
-    framesRef.current = new Array(totalFrames);
-    loadedCountRef.current = 0;
-    hasStartedLoadingRef.current = false;
-    setIsLoaded(false);
-    setLoadPercent(0);
-
-    // Eagerly preload frames on mount
-    hasStartedLoadingRef.current = true;
-    loadChunk(0);
-  }, [sequence, totalFrames, loadChunk]);
-
-  // ── 2. Canvas Renderer ───────────────────────────────────────────────────
+  // ── 1. Canvas Renderer ───────────────────────────────────────────────────
   const renderFrame = useCallback((frameIdx) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -99,17 +55,17 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     if (!ctx) return;
 
     let img = framesRef.current[frameIdx];
-    if (!img) {
+    if (!img || !img.complete || img.naturalWidth === 0) {
       for (let offset = 1; offset < totalFrames; offset++) {
-        if (frameIdx - offset >= 0 && framesRef.current[frameIdx - offset]) {
+        if (frameIdx - offset >= 0 && framesRef.current[frameIdx - offset]?.complete) {
           img = framesRef.current[frameIdx - offset]; break;
         }
-        if (frameIdx + offset < totalFrames && framesRef.current[frameIdx + offset]) {
+        if (frameIdx + offset < totalFrames && framesRef.current[frameIdx + offset]?.complete) {
           img = framesRef.current[frameIdx + offset]; break;
         }
       }
     }
-    if (!img || !img.complete) return;
+    if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const dpr = window.devicePixelRatio || 1;
     const cw = canvas.clientWidth;
@@ -142,13 +98,53 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
       offsetY = 0;
     }
 
-    // Only apply parallax on non-touch devices
     const px = touchDevice.current ? 0 : mouseOffsetRef.current.x * 8;
     const py = touchDevice.current ? 0 : mouseOffsetRef.current.y * 8;
 
     ctx.drawImage(img, offsetX + px, offsetY + py, renderW, renderH);
     ctx.restore();
   }, [totalFrames]);
+
+  // ── 2. Frame Loader (Loads once per sequence) ─────────────────────────────
+  useEffect(() => {
+    framesRef.current = new Array(totalFrames);
+    loadedCountRef.current = 0;
+    setIsLoaded(false);
+    setLoadPercent(0);
+
+    const loadChunk = (startIdx) => {
+      const end = Math.min(startIdx + CHUNK_SIZE, totalFrames);
+      const promises = [];
+
+      for (let i = startIdx; i < end; i++) {
+        promises.push(new Promise((resolve) => {
+          const img = new Image();
+          const frameNum = String(i + 1).padStart(3, '0');
+          img.src = `${sequence.framePath}/${sequence.framePrefix}${frameNum}.${sequence.frameExtension}`;
+          img.onload = () => {
+            framesRef.current[i] = img;
+            loadedCountRef.current += 1;
+            const pct = Math.round((loadedCountRef.current / totalFrames) * 100);
+            setLoadPercent(pct);
+            if (i === 0 && canvasRef.current) renderFrame(0);
+            if (loadedCountRef.current >= totalFrames * 0.8) setIsLoaded(true);
+            resolve();
+          };
+          img.onerror = resolve;
+        }));
+      }
+
+      Promise.all(promises).then(() => {
+        if (end < totalFrames) {
+          setTimeout(() => loadChunk(end), 10);
+        } else {
+          setIsLoaded(true);
+        }
+      });
+    };
+
+    loadChunk(0);
+  }, [sequence.id, sequence.framePath, sequence.framePrefix, sequence.frameExtension, totalFrames, renderFrame]);
 
   // ── 3. ResizeObserver ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -195,7 +191,10 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
   const finishPlayback = useCallback(() => {
     isPlayingRef.current = false;
     hasPlayedRef.current = true;
-    if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
+    if (rafPlayRef.current) {
+      cancelAnimationFrame(rafPlayRef.current);
+      rafPlayRef.current = null;
+    }
 
     currentFrameRef.current = totalFrames - 1;
     setCurrentFrameIndex(totalFrames - 1);
@@ -204,10 +203,10 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     setHasPlayed(true);
     setIsLocked(false);
 
-    if (onLockChange) onLockChange(false);
-    if (onProgressUpdate) onProgressUpdate(sequence.id, 1);
+    onLockChangeRef.current?.(false);
+    onProgressUpdateRef.current?.(sequence.id, 1);
     renderFrame(totalFrames - 1);
-  }, [totalFrames, onLockChange, onProgressUpdate, sequence.id, renderFrame]);
+  }, [totalFrames, sequence.id, renderFrame]);
 
   const startPlayback = useCallback(() => {
     if (isPlayingRef.current) return;
@@ -215,12 +214,12 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     isPlayingRef.current = true;
     setIsPlaying(true);
     setIsLocked(true);
-    if (onLockChange) onLockChange(true);
+    onLockChangeRef.current?.(true);
 
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      lockedScrollYRef.current = window.scrollY + rect.top;
-      window.scrollTo({ top: lockedScrollYRef.current, behavior: 'smooth' });
+      const targetY = window.scrollY + rect.top;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
 
     const startTime = performance.now();
@@ -247,7 +246,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
       setActiveCueIndex(nextCueIdx);
 
       renderFrame(targetFrame);
-      if (onProgressUpdate) onProgressUpdate(sequence.id, progress);
+      onProgressUpdateRef.current?.(sequence.id, progress);
 
       if (progress < 1) {
         rafPlayRef.current = requestAnimationFrame(step);
@@ -256,8 +255,9 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
       }
     };
 
+    if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
     rafPlayRef.current = requestAnimationFrame(step);
-  }, [totalFrames, PLAYBACK_DURATION_MS, sequence, onLockChange, onProgressUpdate, renderFrame, finishPlayback]);
+  }, [totalFrames, PLAYBACK_DURATION_MS, sequence.typographyCues, sequence.id, renderFrame, finishPlayback]);
 
   // ── 6. Trigger on Reach (when user scrolls down to this sequence) ─────────
   useEffect(() => {
@@ -265,8 +265,8 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
       if (hasPlayedRef.current || isPlayingRef.current || !containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      // Trigger when sequence top aligns with viewport top (between -50px and +80px)
-      if (rect.top <= 80 && rect.top >= -80 && rect.bottom >= window.innerHeight * 0.5) {
+      // When sequence reaches near top of screen (between -60px and +100px)
+      if (rect.top <= 100 && rect.top >= -60 && rect.bottom >= window.innerHeight * 0.5) {
         startPlayback();
       }
     };
@@ -275,9 +275,16 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
 
     return () => {
       window.removeEventListener('scroll', handleScrollCheck);
-      if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
     };
   }, [startPlayback]);
+
+  // Cleanup rAF only on unmount
+  useEffect(() => {
+    return () => {
+      if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
+      if (rafMouseRef.current) cancelAnimationFrame(rafMouseRef.current);
+    };
+  }, []);
 
   // ── 7. Mouse Parallax (desktop only) ──────────────────────────────────────
   const handleMouseMove = useCallback((e) => {
@@ -469,7 +476,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
         </div>
 
         {/* Loading Overlay */}
-        {!isLoaded && loadPercent < 100 && (
+        {!isLoaded && loadPercent < 80 && (
           <div className="absolute inset-0 bg-vintage-deepInk/90 backdrop-blur-md z-40 flex flex-col items-center justify-center">
             <div className="text-xs font-mono tracking-widest text-bronze mb-3 uppercase flex items-center gap-2 font-semibold">
               <Film className="w-4 h-4 animate-spin text-bronze" />
