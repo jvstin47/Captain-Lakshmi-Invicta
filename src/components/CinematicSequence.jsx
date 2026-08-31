@@ -54,27 +54,27 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let img = framesRef.current[frameIdx];
-    if (!img || !img.complete || img.naturalWidth === 0) {
-      for (let offset = 1; offset < totalFrames; offset++) {
-        if (frameIdx - offset >= 0 && framesRef.current[frameIdx - offset]?.complete) {
-          img = framesRef.current[frameIdx - offset]; break;
-        }
-        if (frameIdx + offset < totalFrames && framesRef.current[frameIdx + offset]?.complete) {
-          img = framesRef.current[frameIdx + offset]; break;
-        }
-      }
-    }
-    if (!img || !img.complete || img.naturalWidth === 0) return;
-
     const dpr = window.devicePixelRatio || 1;
-    const cw = canvas.clientWidth;
-    const ch = canvas.clientHeight;
+    const cw = canvas.clientWidth || window.innerWidth;
+    const ch = canvas.clientHeight || window.innerHeight;
 
     if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
       canvas.width = Math.round(cw * dpr);
       canvas.height = Math.round(ch * dpr);
     }
+
+    let img = framesRef.current[frameIdx];
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      for (let offset = 1; offset < totalFrames; offset++) {
+        if (frameIdx - offset >= 0 && framesRef.current[frameIdx - offset]?.complete && framesRef.current[frameIdx - offset]?.naturalWidth > 0) {
+          img = framesRef.current[frameIdx - offset]; break;
+        }
+        if (frameIdx + offset < totalFrames && framesRef.current[frameIdx + offset]?.complete && framesRef.current[frameIdx + offset]?.naturalWidth > 0) {
+          img = framesRef.current[frameIdx + offset]; break;
+        }
+      }
+    }
+    if (!img || !img.complete || img.naturalWidth === 0) return;
 
     ctx.save();
     ctx.scale(dpr, dpr);
@@ -105,7 +105,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     ctx.restore();
   }, [totalFrames]);
 
-  // ── 2. Frame Loader (Loads once per sequence) ─────────────────────────────
+  // ── 2. Frame Loader (Loads once per sequence on mount) ─────────────────────
   useEffect(() => {
     framesRef.current = new Array(totalFrames);
     loadedCountRef.current = 0;
@@ -126,8 +126,12 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
             loadedCountRef.current += 1;
             const pct = Math.round((loadedCountRef.current / totalFrames) * 100);
             setLoadPercent(pct);
-            if (i === 0 && canvasRef.current) renderFrame(0);
-            if (loadedCountRef.current >= totalFrames * 0.8) setIsLoaded(true);
+            if (i === 0) {
+              renderFrame(0);
+            }
+            if (loadedCountRef.current >= totalFrames * 0.8) {
+              setIsLoaded(true);
+            }
             resolve();
           };
           img.onerror = resolve;
@@ -136,7 +140,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
 
       Promise.all(promises).then(() => {
         if (end < totalFrames) {
-          setTimeout(() => loadChunk(end), 10);
+          setTimeout(() => loadChunk(end), 8);
         } else {
           setIsLoaded(true);
         }
@@ -144,7 +148,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     };
 
     loadChunk(0);
-  }, [sequence.id, sequence.framePath, sequence.framePrefix, sequence.frameExtension, totalFrames, renderFrame]);
+  }, [sequence.id]); // eslint-disable-line
 
   // ── 3. ResizeObserver ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -265,8 +269,8 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
       if (hasPlayedRef.current || isPlayingRef.current || !containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      // When sequence reaches near top of screen (between -60px and +100px)
-      if (rect.top <= 100 && rect.top >= -60 && rect.bottom >= window.innerHeight * 0.5) {
+      // When sequence enters top 40% of viewport
+      if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.5) {
         startPlayback();
       }
     };
