@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Compass, Film, Sparkles } from 'lucide-react';
+import { Compass, Film, Sparkles, Lock, Unlock, RotateCcw, FastForward } from 'lucide-react';
 
 /**
- * CinematicSequence Engine — v3
+ * CinematicSequence Engine — v4 (Scroll-Locked Sequence Auto-Cycle)
  *
- * Fixes applied (v3):
- * - Touch device detection: disables mouse parallax on touch screens (no mouse = no distortion)
- * - Scroll track height: 250vh on mobile/touch, 150vh on desktop for controlled scrub feel
- * - Scrub HUD: hidden on xs screens (< sm) to prevent canvas occlusion on phones
- * - Typography cue: smaller headline font on mobile, subtext hidden on xs to reduce clutter
- * - Location/era stamp: hidden below md breakpoint to avoid bottom-left overlap with cues
- * - Parallax effect only fires when isTouchDevice is false
+ * Features:
+ * - Locks page scroll as soon as the start of an unplayed sequence is reached.
+ * - Automatically plays the sequence through all frames from 0% to 100% at ~32 FPS.
+ * - Synchronizes canvas frames, typography cues, progress HUD, and parent progress updates.
+ * - Unlocks page scroll immediately upon 100% completion so the user can scroll to the next chapter.
+ * - Supports instant Skip (to immediately unlock) and Replay (to re-lock and watch again).
+ * - Full-height viewport container (`h-screen`) for seamless transition into ChapterBridge.
  */
 
 const isTouchDevice = () =>
   typeof window !== 'undefined' &&
   ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-export default function CinematicSequence({ sequence, onProgressUpdate }) {
+export default function CinematicSequence({ sequence, onProgressUpdate, onLockChange }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const framesRef = useRef([]);
@@ -25,8 +25,10 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const mouseOffsetRef = useRef({ x: 0, y: 0 });
   const currentFrameRef = useRef(0);
   const rafMouseRef = useRef(null);
-  const rafScrollRef = useRef(null);
+  const rafPlayRef = useRef(null);
   const hasStartedLoadingRef = useRef(false);
+  const isPlayingRef = useRef(false);
+  const hasPlayedRef = useRef(false);
   const touchDevice = useRef(isTouchDevice());
 
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
@@ -34,11 +36,16 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
   const [loadPercent, setLoadPercent] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeCueIndex, setActiveCueIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   const totalFrames = sequence.frameCount;
-  const CHUNK_SIZE = 8;
+  const CHUNK_SIZE = 16;
+  const TARGET_FPS = 32;
+  const PLAYBACK_DURATION_MS = (totalFrames / TARGET_FPS) * 1000;
 
-  // ── 1. Chunked Frame Loader ───────────────────────────────────────────────
+  // ── 1. Chunked Frame Preloader ────────────────────────────────────────────
   const loadChunk = useCallback((startIdx) => {
     const end = Math.min(startIdx + CHUNK_SIZE, totalFrames);
     const promises = [];
@@ -63,7 +70,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
 
     Promise.all(promises).then(() => {
       if (end < totalFrames) {
-        setTimeout(() => loadChunk(end), 16);
+        setTimeout(() => loadChunk(end), 12);
       }
     });
   }, [sequence, totalFrames]); // eslint-disable-line
@@ -83,14 +90,14 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '400px' }
+      { rootMargin: '800px' }
     );
 
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [sequence, totalFrames, loadChunk]);
 
-  // ── 2. renderFrame ────────────────────────────────────────────────────────
+  // ── 2. Canvas Renderer ───────────────────────────────────────────────────
   const renderFrame = useCallback((frameIdx) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -160,46 +167,136 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
     return () => ro.disconnect();
   }, [renderFrame]);
 
-  // ── 4. Scroll listener ────────────────────────────────────────────────────
+  // ── 4. Scroll Lock Interceptor ────────────────────────────────────────────
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollHeight = containerRef.current.offsetHeight - window.innerHeight;
-      if (scrollHeight <= 0) return;
+    if (!isLocked) return;
 
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
+    const preventDefault = (e) => {
+      e.preventDefault();
+    };
+
+    const preventKeyScroll = (e) => {
+      const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar'];
+      if (keys.includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+
+    // Lock body overflow
+    const origHtmlOverflow = document.documentElement.style.overflow;
+    const origBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    window.addEventListener('wheel', preventDefault, { passive: false });
+    window.addEventListener('touchmove', preventDefault, { passive: false });
+    window.addEventListener('keydown', preventKeyScroll, { passive: false });
+
+    return () => {
+      document.documentElement.style.overflow = origHtmlOverflow;
+      document.body.style.overflow = origBodyOverflow;
+      window.removeEventListener('wheel', preventDefault);
+      window.removeEventListener('touchmove', preventDefault);
+      window.removeEventListener('keydown', preventKeyScroll);
+    };
+  }, [isLocked]);
+
+  // ── 5. Sequence Playback Engine ───────────────────────────────────────────
+  const finishPlayback = useCallback(() => {
+    isPlayingRef.current = false;
+    hasPlayedRef.current = true;
+    if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
+
+    currentFrameRef.current = totalFrames - 1;
+    setCurrentFrameIndex(totalFrames - 1);
+    setScrollProgress(1);
+    setIsPlaying(false);
+    setHasPlayed(true);
+    setIsLocked(false);
+
+    if (onLockChange) onLockChange(false);
+    if (onProgressUpdate) onProgressUpdate(sequence.id, 1);
+    renderFrame(totalFrames - 1);
+  }, [totalFrames, onLockChange, onProgressUpdate, sequence.id, renderFrame]);
+
+  const startPlayback = useCallback(() => {
+    if (isPlayingRef.current) return;
+
+    isPlayingRef.current = true;
+    setIsPlaying(true);
+    setIsLocked(true);
+    if (onLockChange) onLockChange(true);
+
+    // Eagerly ensure initial chunk is loading if not already
+    if (!hasStartedLoadingRef.current) {
+      hasStartedLoadingRef.current = true;
+      loadChunk(0);
+    }
+
+    const startTime = performance.now();
+    const cues = sequence.typographyCues;
+
+    const step = (now) => {
+      if (!isPlayingRef.current) return;
+
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / PLAYBACK_DURATION_MS);
       const targetFrame = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
 
-      const cues = sequence.typographyCues;
-      let nextCueIdx = activeCueIndex;
+      currentFrameRef.current = targetFrame;
+      setCurrentFrameIndex(targetFrame);
+      setScrollProgress(progress);
+
+      let nextCueIdx = 0;
       for (let i = 0; i < cues.length; i++) {
         if (progress >= cues[i].progressStart && progress <= cues[i].progressEnd) {
           nextCueIdx = i;
           break;
         }
       }
-
-      currentFrameRef.current = targetFrame;
-      setScrollProgress(progress);
-      setCurrentFrameIndex(targetFrame);
       setActiveCueIndex(nextCueIdx);
 
+      renderFrame(targetFrame);
       if (onProgressUpdate) onProgressUpdate(sequence.id, progress);
 
-      cancelAnimationFrame(rafScrollRef.current);
-      rafScrollRef.current = requestAnimationFrame(() => renderFrame(targetFrame));
+      if (progress < 1) {
+        rafPlayRef.current = requestAnimationFrame(step);
+      } else {
+        finishPlayback();
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    rafPlayRef.current = requestAnimationFrame(step);
+  }, [totalFrames, PLAYBACK_DURATION_MS, sequence, onLockChange, onProgressUpdate, renderFrame, finishPlayback, loadChunk]);
+
+  // ── 6. Trigger on Reach (when user scrolls down to this sequence) ─────────
+  useEffect(() => {
+    const handleScrollCheck = () => {
+      if (hasPlayedRef.current || isPlayingRef.current || !containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      // Trigger when sequence top enters near the viewport top
+      const triggerThreshold = window.innerHeight * 0.35;
+
+      if (rect.top <= triggerThreshold && rect.bottom >= window.innerHeight * 0.5) {
+        // Smoothly snap/align container into view
+        containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Start locked auto-cycle playback
+        startPlayback();
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollCheck, { passive: true });
+    // Check initially in case page loaded right at this sequence
+    handleScrollCheck();
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(rafScrollRef.current);
+      window.removeEventListener('scroll', handleScrollCheck);
+      if (rafPlayRef.current) cancelAnimationFrame(rafPlayRef.current);
     };
-  }, [totalFrames, sequence, renderFrame, onProgressUpdate]); // eslint-disable-line
+  }, [startPlayback]);
 
-  // ── 5. Mouse parallax — desktop only ─────────────────────────────────────
+  // ── 7. Mouse Parallax (desktop only) ──────────────────────────────────────
   const handleMouseMove = useCallback((e) => {
     if (touchDevice.current) return;
     mouseOffsetRef.current = {
@@ -211,6 +308,20 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
       renderFrame(currentFrameRef.current);
     });
   }, [renderFrame]);
+
+  // ── 8. Skip / Replay User Actions ─────────────────────────────────────────
+  const handleSkip = (e) => {
+    e.stopPropagation();
+    finishPlayback();
+  };
+
+  const handleReplay = (e) => {
+    e.stopPropagation();
+    containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    hasPlayedRef.current = false;
+    setHasPlayed(false);
+    startPlayback();
+  };
 
   // ── Render ────────────────────────────────────────────────────────────────
   const cues = sequence.typographyCues;
@@ -225,17 +336,14 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
     'bottom-center': 'bottom-24 left-1/2 -translate-x-1/2 max-w-[90vw] md:max-w-xl text-center items-center',
   }[pos] || 'bottom-20 left-4 md:left-10 max-w-[85vw] md:max-w-lg text-left items-start');
 
-  // Taller scroll track on touch/mobile so thumb swipes feel controlled
-  const scrollTrackHeight = touchDevice.current ? 'h-[250vh]' : 'h-[150vh]';
-
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${scrollTrackHeight} bg-vintage-deepInk select-none`}
+      className="relative w-full h-screen bg-vintage-deepInk select-none overflow-hidden"
       onMouseMove={handleMouseMove}
       id={sequence.id}
     >
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-vintage-deepInk">
+      <div className="relative w-full h-full flex items-center justify-center bg-vintage-deepInk overflow-hidden">
 
         <canvas
           ref={canvasRef}
@@ -264,7 +372,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           </div>
         </div>
 
-        {/* Bottom Left Location & Era Stamp — hidden on mobile to avoid overlap with cues */}
+        {/* Bottom Left Location & Era Stamp */}
         <div className="absolute bottom-6 left-4 md:left-10 z-20 pointer-events-none hidden md:block">
           <div className="flex items-center gap-2 text-[11px] font-mono tracking-widest text-bronze uppercase mb-1 font-bold">
             <Compass className="w-3.5 h-3.5" />
@@ -275,7 +383,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           </div>
         </div>
 
-        {/* Typography Cues — ONE rendered at a time, cross-fade */}
+        {/* Typography Cues — rendered with smooth cross-fade */}
         {cues.map((cue, idx) => {
           const isActive = idx === activeCueIndex &&
             scrollProgress >= cue.progressStart &&
@@ -304,12 +412,26 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
           );
         })}
 
-        {/* Scrub HUD — hidden on mobile phones, visible from sm upward */}
-        <div className="absolute bottom-5 right-4 md:right-8 z-30 pointer-events-auto hidden sm:block min-w-[220px] md:min-w-[260px] bg-vintage-deepInk border border-bronze/70 rounded-lg p-3 shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
+        {/* Interactive Scrub & Playback Status HUD */}
+        <div className="absolute bottom-5 right-4 md:right-8 z-30 pointer-events-auto min-w-[220px] md:min-w-[280px] bg-vintage-deepInk/95 backdrop-blur-md border border-bronze/70 rounded-lg p-3 shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
           <div className="flex items-center justify-between text-[10px] font-mono uppercase text-vintage-sand mb-2 pb-1.5 border-b border-vintage-charcoal">
             <span className="flex items-center gap-1.5 text-bronze font-bold">
-              <Film className="w-3 h-3 text-bronze" />
-              <span>RECONSTRUCTION</span>
+              {isPlaying ? (
+                <>
+                  <Lock className="w-3 h-3 text-amber-400 animate-pulse" />
+                  <span className="text-amber-400">PLAYING // SCROLL LOCKED</span>
+                </>
+              ) : hasPlayed ? (
+                <>
+                  <Unlock className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400">UNLOCKED // CONTINUE SCROLL</span>
+                </>
+              ) : (
+                <>
+                  <Film className="w-3 h-3 text-bronze" />
+                  <span>RECONSTRUCTION</span>
+                </>
+              )}
             </span>
             <span className="text-vintage-tan font-bold">
               FRAME {String(currentFrameIndex + 1).padStart(2, '0')}/{totalFrames}
@@ -328,9 +450,29 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
             </span>
           </div>
 
-          <div className="mt-1.5 flex items-center justify-between text-[9px] font-mono text-vintage-sepia uppercase">
-            <span>SCROLL TO SCRUB</span>
-            <span>CINEMATIC ARCHIVE</span>
+          <div className="mt-2.5 flex items-center justify-between text-[9px] font-mono text-vintage-sepia uppercase">
+            {isPlaying ? (
+              <button
+                onClick={handleSkip}
+                className="flex items-center gap-1 text-vintage-sand hover:text-bronze transition-colors px-2 py-0.5 rounded bg-vintage-charcoal border border-vintage-slate"
+                title="Skip to end and unlock page scroll"
+              >
+                <FastForward className="w-3 h-3" />
+                <span>SKIP TO END</span>
+              </button>
+            ) : hasPlayed ? (
+              <button
+                onClick={handleReplay}
+                className="flex items-center gap-1 text-vintage-sand hover:text-bronze transition-colors px-2 py-0.5 rounded bg-vintage-charcoal border border-vintage-slate"
+                title="Replay sequence with locked scroll"
+              >
+                <RotateCcw className="w-3 h-3 text-bronze" />
+                <span>REPLAY SEQUENCE</span>
+              </button>
+            ) : (
+              <span>SCROLL TO START</span>
+            )}
+            <span className="text-vintage-tan">CINEMATIC ARCHIVE</span>
           </div>
         </div>
 
@@ -357,3 +499,4 @@ export default function CinematicSequence({ sequence, onProgressUpdate }) {
     </div>
   );
 }
+

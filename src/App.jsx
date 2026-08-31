@@ -19,6 +19,12 @@ export default function App() {
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const rafAutoScrollRef = useRef(null);
 
+  const [isSequenceLocked, setIsSequenceLocked] = useState(false);
+
+  const handleSequenceLockChange = useCallback((locked) => {
+    setIsSequenceLocked(locked);
+  }, []);
+
   const handleProgressUpdate = (seqId, progress) => {
     if (progress > 0.1 && progress < 0.95) {
       setActiveChapterId(seqId);
@@ -36,6 +42,8 @@ export default function App() {
   // ── Auto Scroll Engine ──────────────────────────────────────────────────
   // Calibrated to 1.25px per frame (~75px/sec) for natural reading and frame scrub
   const scrollStep = useCallback(() => {
+    if (isSequenceLocked) return;
+
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     if (window.scrollY >= maxScroll - 5) {
       setIsAutoScrolling(false);
@@ -44,7 +52,7 @@ export default function App() {
 
     window.scrollBy({ top: 1.25, behavior: 'auto' });
     rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
-  }, []);
+  }, [isSequenceLocked]);
 
   const startAutoScroll = useCallback(() => {
     setIsAutoScrolling(true);
@@ -72,9 +80,9 @@ export default function App() {
     }
   }, [isAutoScrolling, startAutoScroll, stopAutoScroll]);
 
-  // Effect to run the continuous rAF loop when isAutoScrolling is true
+  // Effect to run the continuous rAF loop when isAutoScrolling is true and sequence is not locked
   useEffect(() => {
-    if (isAutoScrolling) {
+    if (isAutoScrolling && !isSequenceLocked) {
       rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
     } else if (rafAutoScrollRef.current) {
       cancelAnimationFrame(rafAutoScrollRef.current);
@@ -82,11 +90,11 @@ export default function App() {
     return () => {
       if (rafAutoScrollRef.current) cancelAnimationFrame(rafAutoScrollRef.current);
     };
-  }, [isAutoScrolling, scrollStep]);
+  }, [isAutoScrolling, isSequenceLocked, scrollStep]);
 
-  // User interruption listeners: stop auto-scroll if user manually wheels or touches
+  // User interruption listeners: stop auto-scroll if user manually wheels or touches (when not locked)
   useEffect(() => {
-    if (!isAutoScrolling) return;
+    if (!isAutoScrolling || isSequenceLocked) return;
 
     const handleUserInterrupt = () => {
       stopAutoScroll();
@@ -99,7 +107,7 @@ export default function App() {
       window.removeEventListener('wheel', handleUserInterrupt);
       window.removeEventListener('touchmove', handleUserInterrupt);
     };
-  }, [isAutoScrolling, stopAutoScroll]);
+  }, [isAutoScrolling, isSequenceLocked, stopAutoScroll]);
 
   return (
     <div className="relative min-h-screen bg-vintage-deepInk text-vintage-paper overflow-x-hidden selection:bg-bronze selection:text-vintage-deepInk">
@@ -123,7 +131,7 @@ export default function App() {
       {/* Required Historical Reconstruction Disclaimer Notice */}
       <DisclaimerBanner />
 
-      {/* Acts 01 to 05: Scroll-Controlled Cinematic Reconstructions + Context Bridges */}
+      {/* Acts 01 to 14: Scroll-Controlled Cinematic Reconstructions + Context Bridges */}
       {SEQUENCES.map((seq, index) => {
         const nextSeq = SEQUENCES[index + 1] || null;
         return (
@@ -131,6 +139,7 @@ export default function App() {
             <CinematicSequence 
               sequence={seq} 
               onProgressUpdate={handleProgressUpdate}
+              onLockChange={handleSequenceLockChange}
             />
 
             <ChapterBridge 
