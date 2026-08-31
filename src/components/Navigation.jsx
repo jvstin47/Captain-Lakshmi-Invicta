@@ -75,13 +75,24 @@ export default function Navigation({ activeChapterId, isAutoScrolling, onToggleA
             </span>
           </div>
 
-          {/* Center: Live Story Act Tracker */}
+          {/* Center: Live Story Act Tracker — resets when back in hero */}
           <div className="hidden lg:flex items-center gap-3 px-4 py-1.5 rounded-full bg-vintage-charcoal/80 border border-vintage-slate/70 backdrop-blur-md text-xs font-mono">
-            <span className="text-bronze font-bold">ACT {activeSeq?.chapterNumber || '01'}</span>
-            <span className="text-vintage-sepia">/</span>
-            <span className="text-vintage-sand tracking-wider uppercase text-[11px] font-medium">
-              {activeSeq?.title || 'The Awakening'}
-            </span>
+            {activeChapterId ? (
+              <>
+                <span className="text-bronze font-bold">ACT {activeSeq?.chapterNumber || '01'}</span>
+                <span className="text-vintage-sepia">/</span>
+                <span className="text-vintage-sand tracking-wider uppercase text-[11px] font-medium">
+                  {activeSeq?.title || 'The Awakening'}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-bronze/60 animate-pulse" />
+                <span className="text-vintage-tan/80 tracking-widest uppercase text-[11px] font-medium">
+                  Historical Monograph
+                </span>
+              </>
+            )}
           </div>
 
           {/* Right Navigation Controls */}

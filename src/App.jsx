@@ -47,6 +47,18 @@ export default function App() {
     });
   }, []);
 
+  // Reset nav tracker to default when user scrolls back into the hero zone
+  useEffect(() => {
+    const heroThreshold = () => window.innerHeight * 0.8;
+    const handleNavReset = () => {
+      if (window.scrollY < heroThreshold()) {
+        setActiveChapterId(null);
+      }
+    };
+    window.addEventListener('scroll', handleNavReset, { passive: true });
+    return () => window.removeEventListener('scroll', handleNavReset);
+  }, []);
+
   const handleSequenceLockChange = useCallback((locked) => {
     setIsSequenceLocked(locked);
   }, []);
