@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Compass, Film, Sparkles, Lock, Unlock, RotateCcw, FastForward } from 'lucide-react';
 
 /**
@@ -45,7 +45,10 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
   const totalFrames = sequence.frameCount;
   const CHUNK_SIZE = 16;
   const TARGET_FPS = 30;
-  const PLAYBACK_DURATION_MS = (totalFrames / TARGET_FPS) * 1000;
+  const PLAYBACK_DURATION_MS = useMemo(
+    () => (totalFrames / TARGET_FPS) * 1000,
+    [totalFrames]
+  );
 
   // ── 1. Canvas Renderer ───────────────────────────────────────────────────
   const renderFrame = useCallback((frameIdx) => {
@@ -263,23 +266,29 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     rafPlayRef.current = requestAnimationFrame(step);
   }, [totalFrames, PLAYBACK_DURATION_MS, sequence.typographyCues, sequence.id, renderFrame, finishPlayback]);
 
-  // ── 6. Trigger on Reach (when user scrolls down to this sequence) ─────────
+  // ── 6. Trigger on Reach — IntersectionObserver (zero scroll-event overhead) ─
   useEffect(() => {
-    const handleScrollCheck = () => {
-      if (hasPlayedRef.current || isPlayingRef.current || !containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-      const rect = containerRef.current.getBoundingClientRect();
-      // When sequence enters top 40% of viewport
-      if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.5) {
-        startPlayback();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          !hasPlayedRef.current &&
+          !isPlayingRef.current
+        ) {
+          startPlayback();
+        }
+      },
+      {
+        // Fire when 40% of the section is visible
+        threshold: 0.4,
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScrollCheck, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScrollCheck);
-    };
+    observer.observe(container);
+    return () => observer.disconnect();
   }, [startPlayback]);
 
   // Cleanup rAF only on unmount
@@ -480,7 +489,7 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
         </div>
 
         {/* Loading Overlay */}
-        {!isLoaded && loadPercent < 80 && (
+        {!isLoaded && (
           <div className="absolute inset-0 bg-vintage-deepInk/90 backdrop-blur-md z-40 flex flex-col items-center justify-center">
             <div className="text-xs font-mono tracking-widest text-bronze mb-3 uppercase flex items-center gap-2 font-semibold">
               <Film className="w-4 h-4 animate-spin text-bronze" />

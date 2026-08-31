@@ -40,9 +40,15 @@ export default function App() {
   }, []);
 
   // ── Auto Scroll Engine ──────────────────────────────────────────────────
-  // Calibrated to 1.25px per frame (~75px/sec) for natural reading and frame scrub
-  const scrollStep = useCallback(() => {
-    if (isSequenceLocked) return;
+  // Uses a stable ref to hold the loop body so lock/unlock never creates ghost rAF loops.
+  const isAutoScrollingRef = useRef(false);
+  const isSequenceLockedRef = useRef(false);
+  isAutoScrollingRef.current = isAutoScrolling;
+  isSequenceLockedRef.current = isSequenceLocked;
+
+  const scrollStepRef = useRef(null);
+  scrollStepRef.current = () => {
+    if (!isAutoScrollingRef.current || isSequenceLockedRef.current) return;
 
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     if (window.scrollY >= maxScroll - 5) {
@@ -51,12 +57,11 @@ export default function App() {
     }
 
     window.scrollBy({ top: 1.25, behavior: 'auto' });
-    rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
-  }, [isSequenceLocked]);
+    rafAutoScrollRef.current = requestAnimationFrame(scrollStepRef.current);
+  };
 
   const startAutoScroll = useCallback(() => {
     setIsAutoScrolling(true);
-    // If currently at top hero, start scrolling smoothly into act 1
     if (window.scrollY < 200) {
       const firstSeq = document.getElementById('seq-01-origins');
       if (firstSeq) {
@@ -69,6 +74,7 @@ export default function App() {
     setIsAutoScrolling(false);
     if (rafAutoScrollRef.current) {
       cancelAnimationFrame(rafAutoScrollRef.current);
+      rafAutoScrollRef.current = null;
     }
   }, []);
 
@@ -80,19 +86,24 @@ export default function App() {
     }
   }, [isAutoScrolling, startAutoScroll, stopAutoScroll]);
 
-  // Effect to run the continuous rAF loop when isAutoScrolling is true and sequence is not locked
+  // Single effect: start/stop the loop based on isAutoScrolling + isSequenceLocked
   useEffect(() => {
-    if (isAutoScrolling && !isSequenceLocked) {
-      rafAutoScrollRef.current = requestAnimationFrame(scrollStep);
-    } else if (rafAutoScrollRef.current) {
+    if (rafAutoScrollRef.current) {
       cancelAnimationFrame(rafAutoScrollRef.current);
+      rafAutoScrollRef.current = null;
+    }
+    if (isAutoScrolling && !isSequenceLocked) {
+      rafAutoScrollRef.current = requestAnimationFrame(scrollStepRef.current);
     }
     return () => {
-      if (rafAutoScrollRef.current) cancelAnimationFrame(rafAutoScrollRef.current);
+      if (rafAutoScrollRef.current) {
+        cancelAnimationFrame(rafAutoScrollRef.current);
+        rafAutoScrollRef.current = null;
+      }
     };
-  }, [isAutoScrolling, isSequenceLocked, scrollStep]);
+  }, [isAutoScrolling, isSequenceLocked]);
 
-  // User interruption listeners: stop auto-scroll if user manually wheels or touches (when not locked)
+  // User interruption: stop auto-scroll if user manually wheels or touches (when not locked)
   useEffect(() => {
     if (!isAutoScrolling || isSequenceLocked) return;
 
