@@ -23,6 +23,9 @@ export default function App() {
   const [isSequenceLocked, setIsSequenceLocked] = useState(false);
 
   const handleReset = useCallback(() => {
+    // Block any IntersectionObserver triggers during the reset scroll
+    window.__navJumping = true;
+
     // Stop auto-scroll
     setIsAutoScrolling(false);
     if (rafAutoScrollRef.current) {
@@ -31,8 +34,17 @@ export default function App() {
     }
     // Increment key → triggers each CinematicSequence to reset
     setResetKey(k => k + 1);
-    // Scroll to very top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Jump instantly to top — no smooth scroll so sequences en-route don't re-trigger
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Clear flag after React has processed the resetKey effect (3 rAFs is safe)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.__navJumping = false;
+        });
+      });
+    });
   }, []);
 
   const handleSequenceLockChange = useCallback((locked) => {

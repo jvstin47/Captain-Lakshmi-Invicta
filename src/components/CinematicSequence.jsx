@@ -296,6 +296,8 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
   }, [totalFrames, PLAYBACK_DURATION_MS, sequence.typographyCues, sequence.id, renderFrame, finishPlayback]);
 
   // ── 6. Trigger on Reach — IntersectionObserver (zero scroll-event overhead) ─
+  // window.__navJumping is set by Navigation/App when programmatically jumping
+  // to a section — prevents sequences en-route from hijacking the scroll.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -305,13 +307,13 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
         if (
           entry.isIntersecting &&
           !hasPlayedRef.current &&
-          !isPlayingRef.current
+          !isPlayingRef.current &&
+          !window.__navJumping
         ) {
           startPlayback();
         }
       },
       {
-        // Fire when 40% of the section is visible
         threshold: 0.4,
       }
     );

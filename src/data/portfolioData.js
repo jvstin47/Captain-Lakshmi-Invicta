@@ -71,11 +71,11 @@ export const ARCHIVAL_EXHIBITS = [
     title: "Dr. Lakshmi in INA Uniform",
     year: "1943",
     location: "Singapore",
-    image: "/archival_photos/badge_rani_of_jhansi.jpg",
-    type: "MILITARY INSIGNIA ARTIFACT",
-    caption: "Official cast brass cap badge of the Rani of Jhansi Regiment, Azad Hind Fauj, worn by Captain Lakshmi and women infantry troops.",
+    image: "/archival_photos/photo_01.jpg",
+    type: "HISTORICAL PHOTOGRAPH",
+    caption: "Captain Lakshmi Sahgal in the olive-drab uniform of the Rani of Jhansi Regiment, Azad Hind Fauj, rendering a military salute.",
     source: "National Archives of India & Netaji Research Bureau, Kolkata",
-    significance: "The physical emblem of Asia's first all-women combat regiment, depicting Rani Lakshmibai of Jhansi leading the charge."
+    significance: "One of the most defining portraits of 20th-century anti-colonial resistance — a woman physician who became Asia's first women's combat infantry commander."
   },
   {
     id: "arch-02",

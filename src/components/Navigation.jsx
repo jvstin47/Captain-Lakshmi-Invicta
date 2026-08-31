@@ -19,9 +19,20 @@ export default function Navigation({ activeChapterId, isAutoScrolling, onToggleA
   const scrollToSection = (id) => {
     setIsDrawerOpen(false);
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (!element) return;
+
+    // Set flag so IntersectionObservers don't trigger mid-jump
+    window.__navJumping = true;
+
+    // Use instant so no sequences can fire while scrolling past them
+    element.scrollIntoView({ behavior: 'instant', block: 'start' });
+
+    // Clear flag after 2 rAFs (enough for observers to settle)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.__navJumping = false;
+      });
+    });
   };
 
   const handleNameClick = () => {
