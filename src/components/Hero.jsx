@@ -133,13 +133,13 @@ export default function Hero({ isAutoScrolling, onToggleAutoScroll }) {
                 className="min-w-[260px] sm:min-w-[290px] max-w-[300px] flex-shrink-0 rounded-lg bg-vintage-charcoal/80 border border-vintage-slate hover:border-bronze transition-all duration-300 shadow-xl overflow-hidden flex flex-col group"
               >
                 {/* Photo Area / Fallback Container */}
-                <div className="aspect-[4/3] w-full bg-vintage-deepInk relative flex items-center justify-center overflow-hidden border-b border-vintage-charcoal">
+                <div className="aspect-[4/3] w-full bg-vintage-deepInk relative flex items-center justify-center overflow-visible border-b border-vintage-charcoal">
                   {!hasError ? (
                     <img 
                       src={photo.filename}
                       alt={photo.title}
                       onError={() => handleImageError(photo.id)}
-                      className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500 group-hover:scale-105 photo-torn"
                     />
                   ) : (
                     /* Historical Archival Placeholder */

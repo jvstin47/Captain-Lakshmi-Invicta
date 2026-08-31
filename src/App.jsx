@@ -17,9 +17,23 @@ export default function App() {
   const [activeChapterId, setActiveChapterId] = useState(SEQUENCES[0].id);
   const [selectedExhibitId, setSelectedExhibitId] = useState(null);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
   const rafAutoScrollRef = useRef(null);
 
   const [isSequenceLocked, setIsSequenceLocked] = useState(false);
+
+  const handleReset = useCallback(() => {
+    // Stop auto-scroll
+    setIsAutoScrolling(false);
+    if (rafAutoScrollRef.current) {
+      cancelAnimationFrame(rafAutoScrollRef.current);
+      rafAutoScrollRef.current = null;
+    }
+    // Increment key → triggers each CinematicSequence to reset
+    setResetKey(k => k + 1);
+    // Scroll to very top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleSequenceLockChange = useCallback((locked) => {
     setIsSequenceLocked(locked);
@@ -131,6 +145,7 @@ export default function App() {
         activeChapterId={activeChapterId}
         isAutoScrolling={isAutoScrolling}
         onToggleAutoScroll={toggleAutoScroll}
+        onReset={handleReset}
       />
 
       {/* Hero Section with Archival Photo Carousel */}
@@ -151,6 +166,7 @@ export default function App() {
               sequence={seq} 
               onProgressUpdate={handleProgressUpdate}
               onLockChange={handleSequenceLockChange}
+              resetKey={resetKey}
             />
 
             <ChapterBridge 

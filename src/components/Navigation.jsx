@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, BookOpen, Clock, Award, Shield, Sparkles, Play, Pause } from 'lucide-react';
+import { Menu, X, BookOpen, Clock, Award, Shield, Sparkles, Play, Pause, RotateCcw } from 'lucide-react';
 import { SEQUENCES, ALL_CHAPTERS } from '../data/sequencesData';
 
-export default function Navigation({ activeChapterId, isAutoScrolling, onToggleAutoScroll }) {
+export default function Navigation({ activeChapterId, isAutoScrolling, onToggleAutoScroll, onReset }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -24,6 +24,14 @@ export default function Navigation({ activeChapterId, isAutoScrolling, onToggleA
     }
   };
 
+  const handleNameClick = () => {
+    if (onReset) {
+      onReset(); // resets all sequences + scrolls to top
+    } else {
+      scrollToSection('hero');
+    }
+  };
+
   return (
     <>
       <header 
@@ -35,16 +43,21 @@ export default function Navigation({ activeChapterId, isAutoScrolling, onToggleA
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
           
-          {/* Refined Clean Editorial Subject Header */}
+          {/* Site Name — clicking resets all sequences and returns to top */}
           <div 
             className="flex flex-col cursor-pointer group" 
-            onClick={() => scrollToSection('hero')}
+            onClick={handleNameClick}
+            title="Return to top & rewatch all acts"
           >
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-bronze group-hover:scale-125 transition-transform" />
               <span className="text-xs md:text-sm font-display font-bold tracking-widest text-vintage-cream uppercase group-hover:text-bronze transition-colors">
                 Lakshmi Sahgal
               </span>
+              {/* Rewatch indicator — only visible on hover after scrolling down */}
+              {isScrolled && (
+                <RotateCcw className="w-3 h-3 text-bronze/0 group-hover:text-bronze/80 transition-all duration-300 -rotate-45 group-hover:rotate-0" />
+              )}
             </div>
             <span className="text-[10px] font-mono tracking-widest text-vintage-tan/80 uppercase pl-4">
               1914 — 2012 // Monograph

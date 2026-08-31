@@ -40,7 +40,7 @@ export default function ArchivalModal({ exhibitId, onClose }) {
               <img 
                 src={exhibit.image} 
                 alt={exhibit.title}
-                className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500 photo-stamp"
               />
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-vintage-deepInk/95 via-vintage-deepInk/60 to-transparent p-3.5 flex items-center justify-between">
                 <span className="text-[11px] font-mono text-bronze uppercase font-bold tracking-wider flex items-center gap-1.5">

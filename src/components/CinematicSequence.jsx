@@ -14,7 +14,7 @@ const isTouchDevice = () =>
   typeof window !== 'undefined' &&
   ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-export default function CinematicSequence({ sequence, onProgressUpdate, onLockChange }) {
+export default function CinematicSequence({ sequence, onProgressUpdate, onLockChange, resetKey = 0 }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const framesRef = useRef([]);
@@ -153,7 +153,36 @@ export default function CinematicSequence({ sequence, onProgressUpdate, onLockCh
     loadChunk(0);
   }, [sequence.id]); // eslint-disable-line
 
-  // ── 3. ResizeObserver ─────────────────────────────────────────────────────
+  // ── 2b. Global Reset (when user clicks name in navbar) ────────────────────
+  useEffect(() => {
+    if (resetKey === 0) return; // skip initial mount
+
+    // Cancel any in-flight animation
+    if (rafPlayRef.current) {
+      cancelAnimationFrame(rafPlayRef.current);
+      rafPlayRef.current = null;
+    }
+
+    // Reset all refs
+    isPlayingRef.current = false;
+    hasPlayedRef.current = false;
+    currentFrameRef.current = 0;
+
+    // Reset all visual state
+    setIsPlaying(false);
+    setHasPlayed(false);
+    setIsLocked(false);
+    setScrollProgress(0);
+    setCurrentFrameIndex(0);
+    setActiveCueIndex(0);
+
+    // Notify parent lock is released
+    onLockChangeRef.current?.(false);
+
+    // Render frame 0 so canvas is not blank
+    renderFrame(0);
+  }, [resetKey, renderFrame]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

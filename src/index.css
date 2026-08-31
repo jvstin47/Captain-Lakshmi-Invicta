@@ -97,3 +97,61 @@
 .animate-fadeIn {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ── Photo Treatment A: Torn Newspaper Edge (Hero Carousel) ─────────────── */
+/* Achieved via SVG clip-path polygon with irregular jagged points           */
+.photo-torn {
+  clip-path: polygon(
+    0% 2%,   1.5% 0%,  3% 1.8%, 5% 0%,   7% 2.2%, 9% 0.4%,
+    11% 1.6%, 13% 0%,  15% 1.9%, 17% 0.3%, 19% 1.5%, 21% 0%,
+    100% 0%, 100% 96%, 98.5% 98%, 97% 96.5%, 95% 98.8%, 93% 97%,
+    91% 99%, 89% 97.2%, 87% 99.5%, 85% 97.8%, 83% 99.2%, 81% 97.5%,
+    0% 98%
+  );
+  filter: contrast(1.08) brightness(0.95);
+}
+
+/* ── Photo Treatment B: Postage Stamp Perforation (Archival Modal) ──────── */
+/* Uses a radial-gradient mask to punch repeating semicircular notches       */
+.photo-stamp {
+  --n: 24;           /* number of perforations per edge */
+  --r: 6px;          /* perforation radius              */
+  --b: 10px;         /* stamp border width              */
+  mask:
+    /* top edge perforations */
+    radial-gradient(circle at 50% 0, transparent var(--r), white calc(var(--r) + 0.5px))
+      top / calc(100% / var(--n)) calc(var(--b) * 2) repeat-x,
+    /* bottom edge perforations */
+    radial-gradient(circle at 50% 100%, transparent var(--r), white calc(var(--r) + 0.5px))
+      bottom / calc(100% / var(--n)) calc(var(--b) * 2) repeat-x,
+    /* left edge perforations */
+    radial-gradient(circle at 0% 50%, transparent var(--r), white calc(var(--r) + 0.5px))
+      left / calc(var(--b) * 2) calc(100% / var(--n)) repeat-y,
+    /* right edge perforations */
+    radial-gradient(circle at 100% 50%, transparent var(--r), white calc(var(--r) + 0.5px))
+      right / calc(var(--b) * 2) calc(100% / var(--n)) repeat-y,
+    /* solid fill center */
+    linear-gradient(white, white);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+  filter: sepia(0.18) contrast(1.05);
+}
+
+/* ── Photo Treatment C: Aged Darkroom Print (Act 06 Badge Card) ─────────── */
+/* Deep inset shadow + very slight random tilt simulate an old darkroom print */
+.photo-darkroom {
+  box-shadow:
+    inset 0 0 22px rgba(18, 16, 14, 0.75),
+    inset 0 0 4px  rgba(192, 130, 105, 0.18),
+    0 8px 32px rgba(0,0,0,0.6);
+  border: 3px solid rgba(192, 130, 105, 0.25);
+  filter: sepia(0.22) contrast(1.12) brightness(0.92);
+  transform: rotate(-0.8deg);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.photo-darkroom:hover {
+  transform: rotate(0deg) scale(1.03);
+  box-shadow:
+    inset 0 0 28px rgba(18, 16, 14, 0.6),
+    0 16px 48px rgba(0,0,0,0.7);
+}
