@@ -36,24 +36,24 @@ export const SEQUENCES = [
         progressEnd: 0.36,
         position: "bottom-left",
         tag: "ORIGINS // 1914",
-        headline: "A Daughter of Awakening",
-        subtext: "Raised in Madras among thinkers, jurists, and defiant voices."
+        headline: "Born into Conscience",
+        subtext: "In colonial Madras, young Lakshmi watched her mother defy imperial edicts and shelter nationalist rebels."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "center-right",
-        tag: "CONSCIENCE // 1930",
-        headline: "The Gaze Beyond the Shutter",
-        subtext: "Rejecting social conservatism, she chose the hardest discipline of her era: modern medicine."
+        tag: "AWAKENING // 1930",
+        headline: "The Unyielding Gaze",
+        subtext: "Rejecting Victorian domesticity, she resolved that true liberation required the mastery of science."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-center",
-        tag: "DECISION",
-        headline: "Service Over Privilege",
-        subtext: "A vow to heal those whom the colonial state chose to ignore."
+        tag: "RESOLVE // 1932",
+        headline: "A Vow of Unconditional Service",
+        subtext: "She chose the hardest path: entering medical school to heal those whom colonial rule abandoned."
       }
     ]
   },
@@ -85,24 +85,24 @@ export const SEQUENCES = [
         progressEnd: 0.36,
         position: "top-left",
         tag: "SCHOLARSHIP // 1934",
-        headline: "The Anatomy of Resistance",
-        subtext: "Rigorous scientific mastery at Madras Medical College."
+        headline: "Mastering the Blade & Stethoscope",
+        subtext: "One of the few women in Madras Medical College, she dissected anatomy by kerosene light."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-right",
         tag: "SPECIALIZATION // 1938",
-        headline: "Women's Health as Duty",
-        subtext: "Specializing in gynaecology to serve disenfranchised mothers and children."
+        headline: "A Shield for Mothers & Children",
+        subtext: "Specializing in gynaecology, she confronted the preventable mortality claiming impoverished women."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "center-left",
         tag: "GRADUATION // 1940",
-        headline: "MBBS & DGO Conferral",
-        subtext: "Armed with stethoscope and surgical knife, ready for the world's convulsions."
+        headline: "The Physician Takes the Oath",
+        subtext: "Armed with medical degrees, she stepped out into a world hurtling toward global warfare."
       }
     ]
   },
@@ -134,24 +134,24 @@ export const SEQUENCES = [
         progressEnd: 0.36,
         position: "bottom-left",
         tag: "PRACTICE // 1939",
-        headline: "Through Arches of Duty",
-        subtext: "A physician moving between segregated colonial hospital wards."
+        headline: "Corridors of Segregation",
+        subtext: "Walking the wards of Kasturba Gandhi Hospital, she witnessed medicine rationed by race and rank."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "top-right",
-        tag: "REALITY // 1940",
-        headline: "The Divide of Empire",
-        subtext: "Witnessing how colonial healthcare abandoned rural and impoverished urban populations."
+        tag: "CONFRONTATION // 1940",
+        headline: "The Cost of Empire",
+        subtext: "Seeing destitute mothers die for lack of basic antiseptics forged her unshakeable moral rage."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-right",
-        tag: "DEPARTURE",
-        headline: "Beyond the Subcontinent",
-        subtext: "In 1940, personal rupture and humanitarian duty led her across the Bay of Bengal to Singapore."
+        tag: "CROSSING // 1940",
+        headline: "A Voyage into the Unknown",
+        subtext: "Determined to practice medicine without colonial fetters, she sailed east across the Bay of Bengal."
       }
     ]
   },
@@ -182,25 +182,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "top-left",
-        tag: "SINGAPORE // 1940",
-        headline: "Arrival at the Crossroads",
-        subtext: "Stepping into the dense, humid crossroads of Southeast Asia on the brink of war."
+        tag: "DIASPORA // 1940",
+        headline: "Arrival at Serangoon Road",
+        subtext: "Stepping into bustling Singapore, she encountered hundreds of thousands of disenfranchised Indian migrants."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-left",
-        tag: "DIASPORA // 1941",
-        headline: "The Plantation Coolies",
-        subtext: "Thousands of disenfranchised Indian migrants found their only doctor in Dr. Lakshmi."
+        tag: "SANCTUARY // 1941",
+        headline: "The Doctor of the Plantation Coolies",
+        subtext: "She treated impoverished rubber tappers and dockers free of charge, earning their deep devotion."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "center-right",
-        tag: "THUNDER ON THE HORIZON",
-        headline: "1941: The Storm Gathers",
-        subtext: "World War II reaches Southeast Asia. Singapore is about to fall."
+        tag: "WAR // DECEMBER 1941",
+        headline: "The Horizon Catches Fire",
+        subtext: "Japanese imperial forces invade Malaya; Singapore's fortress colony begins to crumble."
       }
     ]
   },
@@ -231,25 +231,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "top-right",
-        tag: "SANCTUARY // 1942",
-        headline: "Instruments of Mercy",
-        subtext: "Stethoscopes, clamps, and handwritten registers amidst artillery smoke."
+        tag: "SIEGE // FEBRUARY 1942",
+        headline: "Operating Under the Bombs",
+        subtext: "While colonial administrators fled the island, Dr. Lakshmi kept her clinic doors open amid falling artillery."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-left",
-        tag: "OCCUPATION // 1942",
-        headline: "Treating Wounded & POWs",
-        subtext: "Leading the India Independence League medical relief across Singapore."
+        tag: "OCCUPATION // 1942–1943",
+        headline: "Relief for the Broken & Starving",
+        subtext: "Leading medical relief for POWs and orphaned families, she turned her clinic into a fortress of survival."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-right",
-        tag: "APPOINTMENT WITH DESTINY",
-        headline: "July 1943: Netaji Arrives",
-        subtext: "A four-hour midnight meeting in Singapore will transform the doctor into a Captain."
+        tag: "DESTINY // JULY 1943",
+        headline: "Netaji's Midnight Summons",
+        subtext: "Subhas Chandra Bose arrived in Singapore with a vision that would forever alter her life."
       }
     ]
   },
@@ -280,25 +280,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "bottom-left",
-        tag: "COMMISSION // 1943",
-        headline: "The Captain Steps Forward",
-        subtext: "Trading the clinical gown for the khaki uniform of the Indian National Army."
+        tag: "COMMISSION // JULY 1943",
+        headline: "From Doctor to Commander",
+        subtext: "She traded her medical coat for olive khaki, taking command of Asia's first all-women combat infantry."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "center-right",
-        tag: "TRAINING // 1943",
-        headline: "Bayonets & Night Maneuvers",
-        subtext: "1,500 volunteers undergo rigorous infantry combat drill in Singapore and Rangoon."
+        tag: "DRILL // AUTUMN 1943",
+        headline: "Fifteen Hundred Rifles",
+        subtext: "Plantation workers, nurses, and students mastered bayonets, machine guns, and jungle warfare."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-center",
-        tag: "MINISTRY",
-        headline: "Minister of State",
-        subtext: "Appointed to Netaji's Provisional Government of Free India (Azad Hind)."
+        tag: "GOVERNMENT // OCT 1943",
+        headline: "Minister of the Azad Hind",
+        subtext: "Appointed Minister for Women's Affairs in Netaji's Provisional Government of Free India."
       }
     ]
   },
@@ -329,25 +329,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "top-left",
-        tag: "ADVANCE // 1944",
-        headline: "Monsoon Frontier",
-        subtext: "Trailing through dense Burmese jungle under relentless tropical rainfall."
+        tag: "MARCH // 1944",
+        headline: "Into the Monsoon Jaws",
+        subtext: "Advancing toward the Indian border through knee-deep mud and torrential rainforest downpours."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-right",
-        tag: "FRONTLINE CARE",
-        headline: "Under Allied Air Raids",
-        subtext: "Treating devastating shrapnel injuries in makeshift bamboo trenches."
+        tag: "COMBAT // 1944",
+        headline: "Triage Under Allied Shellfire",
+        subtext: "Operating on wounded soldiers in bamboo dugouts while Allied bombers strafed the canopy."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "center-left",
-        tag: "THE TURNING TIDE",
-        headline: "The Imphal Reversal",
-        subtext: "Allied counter-offensives and monsoon supply cuts force a desperate defensive stance."
+        tag: "IMPHAL // LATE 1944",
+        headline: "The Tide Turns in Blood",
+        subtext: "Starvation, malaria, and severed supply lines forced a heroic but agonising fighting retreat."
       }
     ]
   },
@@ -378,25 +378,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "bottom-left",
-        tag: "RETREAT // 1945",
-        headline: "Guiding the Safe Passage",
-        subtext: "Escorting hundred of women troops across bombed terrain to Thailand."
+        tag: "EVACUATION // MAY 1945",
+        headline: "Ensuring Her Troops' Survival",
+        subtext: "Captain Lakshmi personally escorted hundreds of young women soldiers through bomb-ravaged Burma to safety."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "top-right",
-        tag: "LAST SANCTUARY",
-        headline: "The Maymyo Stand",
-        subtext: "Remaining behind in the jungle hospital as British 14th Army advances."
+        tag: "STAND // JUNE 1945",
+        headline: "Refusing the Flight to Safety",
+        subtext: "She stayed behind in the Maymyo jungle hospital because dying men still needed a doctor."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-center",
         tag: "CAPTURE // JULY 1945",
-        headline: "Prisoner of the Crown",
-        subtext: "Arrested in the Burmese hills, maintaining military dignity under interrogation."
+        headline: "Unbroken in Captivity",
+        subtext: "Captured by British forces in the Burmese hills, she faced interrogation with absolute defiance."
       }
     ]
   },
@@ -427,25 +427,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "top-left",
-        tag: "DELHI // MARCH 1946",
-        headline: "Return in Captivity",
-        subtext: "Repatriated under armed British military escort into a nation on the brink of revolt."
+        tag: "RETURN // MARCH 1946",
+        headline: "Brought Home in Chains",
+        subtext: "Flown into Delhi as a prisoner of war, she found the nation on fire with anti-colonial fervor."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-right",
-        tag: "POPULAR UPRISING",
-        headline: "The Red Fort Galvanism",
-        subtext: "Huge crowds across Calcutta, Bombay, and Delhi demand the unconditional release of INA officers."
+        tag: "REBELLION // 1946",
+        headline: "The Spark that Lit the Subcontinent",
+        subtext: "The INA Red Fort trials and Navy mutinies made British military control impossible to sustain."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "center-left",
-        tag: "RELEASE",
-        headline: "A Victorious Return",
-        subtext: "Released into mass adulation as the sun rapidly sets on the British Empire."
+        tag: "FREEDOM // 1946–1947",
+        headline: "The Hero's Welcome",
+        subtext: "Freed by overwhelming public revolt, she stood celebrated as the living embodiment of Azad Hind."
       }
     ]
   },
@@ -476,25 +476,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "bottom-left",
-        tag: "KANPUR // 1947",
-        headline: "The Displaced & The Worker",
-        subtext: "Opening a humble dispensary amidst the smoke of Kanpur's textile mills."
+        tag: "DISPENSARY // 1947",
+        headline: "A New Frontline in the Alleys",
+        subtext: "Rejecting high political office, she established a humble clinic in the industrial mill districts of Kanpur."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "top-right",
-        tag: "DEDICATION // 1950s–1960s",
-        headline: "Daily Queues of the Forgotten",
-        subtext: "Treating over a hundred patients daily, funding medicines from her own meager pocket."
+        tag: "DEVOTION // 1950s–1960s",
+        headline: "Free Medicine for Mill Hands & Refugees",
+        subtext: "Treating over a hundred patients daily, she paid for their life-saving prescriptions out of her own pocket."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-right",
-        tag: "HEALER'S ANCHOR",
-        headline: "Fifty Years at the Desk",
-        subtext: "A lifetime commitment to the health of Northern India's industrial working class."
+        tag: "LEGACY // HALF CENTURY",
+        headline: "The Captain Who Stayed to Heal",
+        subtext: "For five continuous decades, her clinic remained an open sanctuary for Kanpur's poorest families."
       }
     ]
   },
@@ -525,25 +525,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "top-left",
-        tag: "BONGAON // 1971",
-        headline: "The Ocean of Refugees",
-        subtext: "Arriving at the border amidst the worst humanitarian crisis in South Asian history."
+        tag: "CRISIS // 1971",
+        headline: "Ten Million in Flight",
+        subtext: "As millions fled genocidal violence in Bangladesh, Dr. Lakshmi rushed directly to the border camps."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "center-left",
-        tag: "EPIDEMIC SHIELD",
-        headline: "Battling the Cholera Surge",
-        subtext: "Setting up emergency saline distribution tents in heavy monsoon downpours."
+        tag: "EPIDEMIC // BONGAON",
+        headline: "The Wall Against Cholera",
+        subtext: "Working waist-deep in monsoon mud, she set up emergency saline stations to save dehydrating infants."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-right",
-        tag: "FRONTLINE HUMANITARIAN",
-        headline: "Unfaltering Endurance",
-        subtext: "Months of tireless relief work saving thousands of displaced families."
+        tag: "COMPASSION // 1971",
+        headline: "Medicine Without Borders",
+        subtext: "Her tireless relief proved that true patriotism transcends boundaries to protect vulnerable humanity."
       }
     ]
   },
@@ -574,25 +574,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "bottom-left",
-        tag: "KANPUR // NOVEMBER 1984",
-        headline: "The Wall Against the Mob",
-        subtext: "Physically shielding Sikh neighbours and refugees from communal violence."
+        tag: "COURAGE // NOV 1984",
+        headline: "Standing Between Mob & Neighbour",
+        subtext: "During anti-Sikh violence in Kanpur, 70-year-old Captain Lakshmi blocked rioters with her own body."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "top-right",
-        tag: "BHOPAL // DECEMBER 1984",
-        headline: "The Toxic Aftermath",
-        subtext: "Leading medical teams to treat respiratory trauma following the Union Carbide gas leak."
+        tag: "BHOPAL // DEC 1984",
+        headline: "Healing the Poisoned City",
+        subtext: "Following the Union Carbide gas tragedy, she led medical teams to treat thousands suffering respiratory trauma."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-center",
-        tag: "ACTIVISM",
-        headline: "Voice of the Dispossessed",
-        subtext: "Founding leader of AIDWA, organizing working women nationwide."
+        tag: "SOLIDARITY // 1980s–90s",
+        headline: "Organising Working Women Nationwide",
+        subtext: "As a founding pillar of AIDWA, she marched for equal wages, safety, and constitutional rights."
       }
     ]
   },
@@ -624,24 +624,24 @@ export const SEQUENCES = [
         progressEnd: 0.36,
         position: "top-left",
         tag: "NOMINATION // 2002",
-        headline: "The Veteran Candidate",
-        subtext: "Nominated for the highest constitutional office of the Republic at age eighty-seven."
+        headline: "The Conscience of the Republic",
+        subtext: "At 87, she was nominated for President of India to defend secular democracy and pluralism."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "bottom-right",
-        tag: "CAMPAIGN OF CONSCIENCE",
-        headline: "A Platform for the Voiceless",
-        subtext: "Touring the country to advocate for secular unity, healthcare access, and farmer rights."
+        tag: "CAMPAIGN // 2002",
+        headline: "A Platform for the Forgotten",
+        subtext: "She traversed the nation demanding universal healthcare, farmers' dignity, and communal peace."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "center-left",
         tag: "INTEGRITY",
-        headline: "Principles Over Power",
-        subtext: "Demonstrating that unwavering moral resistance matters more than political triumph."
+        headline: "Principles Higher Than Power",
+        subtext: "A campaign that proved fearless dissent is the heartbeat of a truly free democracy."
       }
     ]
   },
@@ -672,25 +672,25 @@ export const SEQUENCES = [
         progressStart: 0.05,
         progressEnd: 0.36,
         position: "bottom-left",
-        tag: "TWILIGHT YEARS // 2006",
-        headline: "The Healer's Final Patient",
-        subtext: "Practicing medicine in Kanpur until age ninety-two with unwavering empathy."
+        tag: "HEALER // UNTIL AGE 92",
+        headline: "Examining Her Final Patients",
+        subtext: "Into her nineties, she climbed the stairs of her Kanpur clinic every morning to treat the poor."
       },
       {
         progressStart: 0.37,
         progressEnd: 0.70,
         position: "top-right",
-        tag: "FINAL DONATION // 2012",
-        headline: "A Body Donated to Science",
-        subtext: "Her corneas and remains gifted to GSVM Medical College for student education."
+        tag: "DONATION // JULY 2012",
+        headline: "A Final Gift to Medical Science",
+        subtext: "In death, her body and corneas were gifted to GSVM Medical College to educate young doctors."
       },
       {
         progressStart: 0.71,
         progressEnd: 0.99,
         position: "bottom-center",
-        tag: "ETERNAL RECORD",
-        headline: "An Unbroken Oath",
-        subtext: "A life etched forever into the moral conscience of a free and just world."
+        tag: "IMMORTALITY",
+        headline: "The Unbroken Oath",
+        subtext: "Physician, Commander, Healer — a life eternally dedicated to human freedom and dignity."
       }
     ]
   }
