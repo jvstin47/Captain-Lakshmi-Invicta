@@ -33,16 +33,38 @@ export default function ArchivalModal({ exhibitId, onClose }) {
           {exhibit.title}
         </h3>
 
-        <div className="aspect-[16/9] w-full rounded-lg bg-vintage-deepInk border border-vintage-slate mb-6 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
-          <div className="w-16 h-16 rounded-full border border-bronze/40 flex items-center justify-center bg-bronze/10 mb-4">
-            <BookOpen className="w-8 h-8 text-bronze" />
-          </div>
-          <div className="text-sm font-mono text-bronze uppercase font-bold mb-1">
-            ARCHIVAL PRIMARY EVIDENCE
-          </div>
-          <p className="text-xs md:text-sm font-serif text-vintage-sand max-w-md">
-            {exhibit.caption}
-          </p>
+        {/* Archival Artifact Display */}
+        <div className="aspect-[16/9] w-full rounded-lg bg-vintage-deepInk border border-vintage-slate mb-6 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+          {exhibit.image ? (
+            <>
+              <img 
+                src={exhibit.image} 
+                alt={exhibit.title}
+                className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-vintage-deepInk/95 via-vintage-deepInk/60 to-transparent p-3.5 flex items-center justify-between">
+                <span className="text-[11px] font-mono text-bronze uppercase font-bold tracking-wider flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>PRIMARY ARTIFACT // {exhibit.year}</span>
+                </span>
+                <span className="text-[10px] font-mono text-vintage-tan">
+                  {exhibit.location}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="p-8 text-center flex flex-col items-center">
+              <div className="w-16 h-16 rounded-full border border-bronze/40 flex items-center justify-center bg-bronze/10 mb-4">
+                <BookOpen className="w-8 h-8 text-bronze" />
+              </div>
+              <div className="text-sm font-mono text-bronze uppercase font-bold mb-1">
+                ARCHIVAL PRIMARY EVIDENCE
+              </div>
+              <p className="text-xs md:text-sm font-serif text-vintage-sand max-w-md">
+                {exhibit.caption}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-vintage-slate text-xs font-mono">

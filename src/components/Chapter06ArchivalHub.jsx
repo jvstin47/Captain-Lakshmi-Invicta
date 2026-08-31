@@ -110,10 +110,16 @@ export default function Chapter06ArchivalHub({ onOpenArchivalModal }) {
                 <span>ARCHIVAL EXHIBIT // 01</span>
               </div>
 
-              <div className="aspect-[4/3] rounded-lg bg-vintage-charcoal border border-vintage-slate mb-4 flex flex-col items-center justify-center p-4 text-center">
-                <Shield className="w-12 h-12 text-bronze/60 mb-3" />
-                <div className="text-xs font-display font-bold text-vintage-paper">Rani of Jhansi Regiment Badge</div>
-                <div className="text-[11px] font-serif text-vintage-tan mt-1">Azad Hind Armed Forces (1943)</div>
+              <div className="aspect-[4/3] rounded-lg bg-vintage-deepInk border border-vintage-slate mb-4 overflow-hidden relative group shadow-inner">
+                <img 
+                  src="/archival_photos/badge_rani_of_jhansi.jpg" 
+                  alt="Rani of Jhansi Regiment Badge" 
+                  className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-vintage-deepInk/95 via-vintage-deepInk/60 to-transparent p-2.5 flex flex-col justify-end">
+                  <div className="text-xs font-display font-bold text-vintage-paper">Rani of Jhansi Regiment Insignia</div>
+                  <div className="text-[10px] font-mono text-bronze">Azad Hind Armed Forces (1943) // Brass Cap Badge</div>
+                </div>
               </div>
 
               <div className="text-xs font-mono text-vintage-sand leading-relaxed mb-5">
