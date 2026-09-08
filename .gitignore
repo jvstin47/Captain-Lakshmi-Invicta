@@ -22,7 +22,7 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
-# OS Files
+# OS & Editor Files
 .DS_Store
 .DS_Store?
 ._*
@@ -30,8 +30,6 @@ lerna-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# IDE & Editors
 .vscode/
 .idea/
 *.suo
@@ -40,6 +38,14 @@ Thumbs.db
 *.sln
 *.sw?
 
+# Python temp & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
 # Video source clips (extracted into public/sequences)
+source_clips/
 *.mp4
 *.mov
+

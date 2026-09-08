@@ -3,10 +3,12 @@
 # CAPTAIN LAKSHMI SAHGAL (1914–2012)
 ### *An Interactive Digital Monograph & Scroll-Driven Historical Documentary*
 
-[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg?style=for-the-badge)](LICENSE)
+[![React 19](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![Vite 5](https://img.shields.io/badge/Vite-5.4-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS 3](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Canvas 2D](https://img.shields.io/badge/Render-Hardware_Canvas_2D-e34c26?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+[![CI Status](https://img.shields.io/badge/CI-Passing-success?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/jvstin47/Captain-Lakshmi-Invicta/actions)
 
 <p align="center">
   <strong>Physician • Commander of the Rani of Jhansi Regiment • Minister of State • Prisoner of War • Lifelong Healer</strong>
@@ -28,64 +30,55 @@ The platform moves beyond conventional scrolling articles by introducing a **har
 
 ---
 
-## 🧭 Narrative Pillars: The 14 Acts
+## 🧭 Narrative Continuum: The 14 Acts
 
-The digital monograph is architected around a 14-chapter biographical continuum:
+The digital monograph is architected around a 14-chapter biographical timeline:
 
-| Act | Title | Era | Location | Key Theme |
+| Act | Title | Era | Location | Core Historical Dimension |
 | :--- | :--- | :--- | :--- | :--- |
 | **01** | **The Awakening** | 1914–1932 | Madras Presidency | Early life, Swaminathan family political crucible, anti-colonial awakening |
 | **02** | **The Science of Healing** | 1932–1938 | Madras Medical College | MBBS & DGO training, mastering anatomy & obstetrics during colonial austerity |
-| **03** | **The Healer’s Oath** | 1938–1940 | Madras Govt Hospitals | Segregated colonial hospital wards, healthcare as social justice |
+| **03** | **The Healer’s Oath** | 1938–1940 | Madras Govt Hospitals | Segregated colonial hospital wards, healthcare as radical social justice |
 | **04** | **Crossroads in Malaya** | 1940–1941 | Singapore / Malaya | Diaspora practice on Serangoon Road, treating Tamil rubber plantation coolies |
 | **05** | **Clinic of the Dispossessed** | 1941–1943 | Wartime Singapore | Japanese air raids, frontline medical sanctuary, IIL Medical Wing relief |
-| **06** | **The Commander Takes the Field** | 1943–1944 | Singapore / Malaya | Netaji 4-hour meeting, raising Asia’s first all-women combat regiment (1,500+ troops) |
+| **06** | **The Commander** | 1943–1944 | Singapore / Burma | Netaji 4-hour meeting, raising Asia’s first all-women combat regiment (1,500+ troops) |
 | **07** | **The Burma March** | 1944–1945 | Maymyo / Imphal | Jungle warfare, mobile military hospital under Allied artillery bombardment |
 | **08** | **The Jungle Retreat** | 1945–1946 | Kalaw / Burma Front | Refusing surrender until patients evacuated; capture by British forces |
 | **09** | **Trial & Return** | 1946–1947 | Delhi / Red Fort | INA Trials public fervor, release, hero’s return to a free nation |
-| **10** | **Kanpur: Fifty Years of Care** | 1947–1990s | Kanpur, UP | The Clinic of the Poor: ₹5 consultations, free maternal & refugee care |
-| **11** | **The 1971 Refugee Crisis** | 1971 | Bongaon Border | Organizing medical relief camps for millions fleeing the Bangladesh genocide |
-| **12** | **The Frontline Activist** | 1980s–1990s | Kanpur / Bhopal | Bhopal disaster medical relief; protecting Sikh families during 1984 violence |
+| **10** | **Kanpur: Fifty Years of Care** | 1947–1970 | Kanpur, UP | The Clinic of the Poor: ₹5 consultations, free maternal & refugee care |
+| **11** | **1971: The Refugee Camps** | 1971 | Bongaon Border | Organizing emergency cholera relief camps for millions fleeing Bangladesh genocide |
+| **12** | **The Frontline Activist** | 1980s–1990s | Kanpur / Bhopal | Bhopal gas leak medical relief; physically shielding Sikh families in 1984 |
 | **13** | **The People’s Candidate** | 2002 | New Delhi | Historic presidential candidacy representing democratic and secular dissent |
 | **14** | **The Living Legacy** | 2012 & Beyond | Global Record | Final donation of her body for medical research; unbroken physician's oath |
 
 ---
 
-## ⚡ Technical Architecture & Engineering Innovations
+## ⚡ Technical Architecture & Engineering Highlights
 
-### 1. Scroll-Controlled Frame Sequencer Engine (`CinematicSequence.jsx`)
-* **Hardware-Accelerated `<canvas>` Renderer:** Renders frame-by-frame image sequences synchronised to scroll delta, avoiding the latency and memory overhead of HTML5 `<video>` scrubbing.
-* **Device Pixel Ratio (DPR) Scaling:** Dynamic resolution management preserving sharpness on Retina and 4K displays with aspect-ratio cover mathematics.
-* **Chunked Batch Preloading & Memory Safety:** Frames load progressively in 8-frame chunks gated behind an `IntersectionObserver`. Off-screen sequences do not consume memory, preventing OOM crashes on mobile.
-* **ResizeObserver Auto-Sync:** Dynamically calculates canvas dimensions upon device rotation and browser viewport adjustments.
-* **Decoupled Mouse Parallax:** State-decoupled mouse offset with `requestAnimationFrame` throttling for stutter-free cursor depth perception.
-* **Single-Cue Cross-Fade Engine:** Dynamic typography cues trigger cleanly on scroll ranges without visual text overlap.
+### 1. Hardware-Accelerated `<canvas>` Engine (`CinematicSequence.jsx`)
+* **Dynamic DPR Scaling:** Automatically matches physical display pixel density with `window.devicePixelRatio` for razor-sharp rendering on Retina and 4K screens.
+* **Aspect-Ratio Cover Mathematics:** Fluidly scales 16:9 historical frames to fill any viewport dimension without stretching or distorting authentic archival aspect ratios.
+* **IntersectionObserver Native Compositing:** Triggers frame sequences via native browser compositing thresholds, eliminating scroll-event bottlenecking on high-refresh displays.
+* **Programmatic Nav-Jump Guard:** A global `__navJumping` coordination flag prevents intermediate off-screen sequences from hijacking scroll positions during instant navigation.
 
-### 2. Automated Asset Pipeline & Watermark Inpainting (`scripts/extract_sequences.py`)
-* Source video clips are processed through a custom FFmpeg pipeline:
-  ```bash
-  ffmpeg -i source.mp4 -vf "delogo=x=1670:y=830:w=180:h=160,fps=24,scale=1600:-1:flags=lanczos" -c:v libwebp -quality 82 out/frame_%03d.webp
-  ```
-* High-quality Lanczos scaling generates lightweight, high-fidelity WebP frames while seamlessly inpainting synthetic watermark artifacts at the asset level.
+### 2. Auto-Tour & One-Click Rewatch Architecture
+* **Continuous Sub-Pixel Auto Tour:** Stable `requestAnimationFrame` loop advancing smooth historical progression at calibrated reading velocity (~75px/sec).
+* **Global One-Click Rewatch:** Clicking the masthead monogram in the persistent navigation bar resets all 14 sequence states, clears animation buffers, and returns smoothly to the monograph opening.
+* **Context-Aware Navigation Tracker:** Dynamic nav pill tracks the active act as the user scrolls, gracefully falling back to `"Historical Monograph"` when returning to the hero masthead.
 
-### 3. Broadsheet Daily Gazette Timeline (`HorizontalTimeline.jsx`)
-* **Authentic 1940s Newsprint Aesthetic:** Designed as *"THE HISTORICAL GAZETTE & DISPATCH"*, featuring drop-cap editorial typography, volume/issue datelines, and letterpress drop shadows.
-* **Desk Category Filters:** Interactive switching across *Origins, Medicine, Command, Humanitarian, Activism,* and *Legacy*.
-* **Right-Edge Scroll Affordance:** Soft radial fade indicator guiding the user through 12 chronological dispatches.
-
-### 4. Archival Photographic Record & Dual Provenance Standard
-* **Historical Reconstruction Notice:** Clear ethical distinction between graphical visual recreations and verified primary source materials.
-* **Archival Photo Carousel (`Hero.jsx`):** Dedicated browser for authentic photographs sourced from the National Archives of India and Netaji Research Bureau.
-* **Deep-Inspection Modal (`ArchivalModal.jsx`):** High-resolution examination of primary source artifacts with archival metadata, cataloging IDs, and historical provenance.
+### 3. Dual Provenance Standard & Archival Deep-Viewer (`ArchivalModal.jsx`)
+* **Clear Ethical Distinction:** Distinct UI signifiers differentiate artistic visual reconstructions from verified primary sources.
+* **Archival Specimen Mount:** Primary artifact images display in high fidelity with archival double-matting, cataloging IDs (National Archives of India & Netaji Research Bureau), and historical significance notes.
+* **Hero Archival Photo Carousel (`Hero.jsx`):** Authentic photographic records presented in a horizontal scrollway with period-accurate deckle edges.
 
 ---
 
-## 🎨 Design System & Palette
+## 🎨 Design System & Visual Identity
 
-| Token Name | Hex Code | Purpose & Context |
+| Token Name | Hex Code | Visual Context |
 | :--- | :--- | :--- |
-| `vintage-deepInk` | `#12100e` | Foundation background; rich warm black |
-| `vintage-charcoal` | `#262320` | Secondary surface, card containers, news cards |
+| `vintage-deepInk` | `#12100e` | Foundation canvas; rich warm black |
+| `vintage-charcoal` | `#262320` | Secondary surface, card containers, gazette cards |
 | `vintage-paper` | `#f3efe6` | Primary typographic heading ink |
 | `vintage-sand` | `#dfd5c0` | Body serif reading text |
 | `bronze` | `#c08269` | Primary narrative accent, historical highlights |
@@ -93,59 +86,52 @@ The digital monograph is architected around a 14-chapter biographical continuum:
 | `terracotta` | `#913b30` | Gazette stamps, urgent historical dispatches |
 | `khaki-dark` | `#303429` | Military archival hub (Act 06 Rani of Jhansi) |
 
-### Typography Hierarchy
+### Typographic Hierarchy
 * **Display Headlines:** *DM Serif Display* (dignified editorial gravitas)
 * **Body / Archival Prose:** *Newsreader* & *Libre Baskerville* (period-accurate literary and newsprint)
 * **Metadata & Datelines:** *Courier Prime* & *Space Mono* (telegraphic typewriter dispatches)
 
 ---
 
-## 📂 Archive Architecture
+## 📂 Project Structure
 
 ```
-Invicta/
+Captain-Lakshmi-Invicta/
+├── .github/
+│   ├── workflows/ci.yml        # Automated build & verification CI pipeline
+│   ├── ISSUE_TEMPLATE/         # Bug reports, historical corrections & feature requests
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── public/
-│   ├── archival_photos/        # Authentic historical photographs (photo_01 to photo_07)
-│   └── sequences/              # Reconstructed WebP frame sequences (24fps)
-│       ├── seq-01-origins/     # Act 01: The Awakening (192 frames)
-│       ├── seq-02-medicine/    # Act 02: The Science of Healing (192 frames)
-│       ├── seq-03-calling/     # Act 03: The Healer's Oath (192 frames)
-│       ├── seq-04-singapore/   # Act 04: Crossroads in Malaya (240 frames)
-│       ├── seq-05-clinic/      # Act 05: Clinic of the Dispossessed (240 frames)
-│       ├── seq-06-commander/   # Act 06: The Commander (240 frames)
-│       ├── seq-07-burma/       # Act 07: The Burma March (240 frames)
-│       ├── seq-08-jungle/      # Act 08: The Jungle Retreat (240 frames)
-│       ├── seq-09-trial/       # Act 09: Trial & Return (240 frames)
-│       ├── seq-10-kanpur/      # Act 10: Kanpur: 50 Years of Care (240 frames)
-│       ├── seq-11-refugee/     # Act 11: 1971 Refugee Camps (240 frames)
-│       ├── seq-12-activist/    # Act 12: Frontline Activist (240 frames)
-│       ├── seq-13-candidate/   # Act 13: The People's Candidate (240 frames)
-│       └── seq-14-legacy/      # Act 14: The Living Legacy (240 frames)
+│   ├── archival_photos/        # Verified primary photographs & documents
+│   ├── favicon.ico             # Multi-resolution favicon (16x16, 32x32, 64x64)
+│   ├── favicon.svg             # Vector regiment star favicon
+│   ├── apple-touch-icon.png    # High-res iOS bookmark icon
+│   └── sequences/              # 14 Reconstructed WebP frame sequences (1600x900)
 ├── scripts/
-│   └── extract_sequences.py    # FFmpeg frame extraction & watermark inpainting pipeline
+│   └── extract_sequences.py    # FFmpeg frame extraction & scaling pipeline
 ├── src/
 │   ├── components/
-│   │   ├── Navigation.jsx          # Editorial header, live Act tracker & chapter drawer
-│   │   ├── Hero.jsx                # Display masthead & archival photo carousel
-│   │   ├── DisclaimerBanner.jsx    # Historical reconstruction disclaimer notice
-│   │   ├── CinematicSequence.jsx   # Hardware-accelerated canvas frame sequencer
-│   │   ├── ChapterBridge.jsx       # Era-accented context bridge with verified citations
-│   │   ├── Chapter06ArchivalHub.jsx# Turning point military archive (Rani of Jhansi)
+│   │   ├── Navigation.jsx          # Sticky header, act tracker & rewatch trigger
+│   │   ├── Hero.jsx                # Display masthead & archival photo strip
+│   │   ├── DisclaimerBanner.jsx    # Historical reconstruction disclaimer
+│   │   ├── CinematicSequence.jsx   # Hardware canvas sequencer & scroll engine
+│   │   ├── ChapterBridge.jsx       # Editorial bridge with primary source citations
+│   │   ├── Chapter06ArchivalHub.jsx# Military turning-point dossier (Rani of Jhansi)
 │   │   ├── HorizontalTimeline.jsx  # Broadsheet newspaper interactive timeline
-│   │   ├── LifePortfolioGrid.jsx   # 4-facet biography portfolio (Struggles vs Contributions)
-│   │   ├── FutureChaptersRoadmap.jsx# Acts 07–14 editorial narrative preview
-│   │   ├── ArchivalModal.jsx       # Museum deep-inspection modal
-│   │   └── Footer.jsx              # Historical sources, bibliography & credits
+│   │   ├── LifePortfolioGrid.jsx   # 4-facet biography matrix (Struggles vs Contributions)
+│   │   ├── FutureChaptersRoadmap.jsx# Acts 07–14 preview roadmap
+│   │   ├── ArchivalModal.jsx       # Primary source museum viewer
+│   │   └── Footer.jsx              # Historical bibliography & references
 │   ├── data/
-│   │   ├── sequencesData.js        # Sequence definitions, frame paths, typography cues
-│   │   ├── timelineData.js         # 12 verified milestones with datelines & impact
-│   │   ├── portfolioData.js        # Life roles matrix & archival exhibits
-│   │   └── heroPhotosData.js       # Archival photo metadata & provenance
-│   ├── App.jsx                     # Core application orchestrator
-│   ├── index.css                   # Vintage film grain, vignettes & letterpress styling
-│   └── main.jsx                    # React entrypoint
-├── index.html                      # SEO metadata, OpenGraph tags & Google Fonts
-├── tailwind.config.js              # Vintage tokens & font mappings
+│   │   ├── sequencesData.js        # 14 Acts data registry & typography cues
+│   │   ├── timelineData.js         # Chronological milestones & gazette dispatches
+│   │   ├── portfolioData.js        # Archival exhibits & life facets
+│   │   └── heroPhotosData.js       # Archival portraits metadata & provenance
+│   ├── App.jsx                     # Top-level application coordinator
+│   ├── index.css                   # Custom film grain, letterpress & photo styling
+│   └── main.jsx                    # React 19 entrypoint
+├── index.html                      # SEO metadata, OpenGraph tags & typography
+├── tailwind.config.js              # Custom archival palette tokens
 └── vite.config.js                  # Vite configuration
 ```
 
@@ -154,15 +140,14 @@ Invicta/
 ## 🚀 Getting Started
 
 ### Prerequisites
-* **Node.js:** v18.0.0 or higher
-* **npm:** v9.0.0 or higher
-* *(Optional for frame extraction)*: **FFmpeg 6.0+** with `libwebp` support
+* **Node.js:** `v18.0.0` or higher (Node 20+ recommended)
+* **npm:** `v9.0.0` or higher
 
-### Installation & Run
+### Local Development
 
 1. **Clone the Repository:**
    ```bash
-   git clone git@github.com:jvstin47/Captain-Lakshmi-Invicta.git
+   git clone https://github.com/jvstin47/Captain-Lakshmi-Invicta.git
    cd Captain-Lakshmi-Invicta
    ```
 
@@ -171,13 +156,13 @@ Invicta/
    npm install
    ```
 
-3. **Start Local Development Server:**
+3. **Start Development Server:**
    ```bash
    npm run dev
    ```
-   Navigate to `http://localhost:3000/` (or port indicated in the terminal).
+   Open your browser at `http://localhost:5173/` (or the port indicated in terminal).
 
-4. **Production Build:**
+4. **Production Build & Preview:**
    ```bash
    npm run build
    npm run preview
@@ -185,7 +170,7 @@ Invicta/
 
 ---
 
-## 📚 Primary Historical References & Bibliography
+## 📚 Archival Provenance & Bibliography
 
 1. **Sahgal, Lakshmi.** *A Revolutionary Life: Memoirs of a Political Activist.* Kali for Women / Zubaan Books, 1997 / 2011.
 2. **National Archives of India (NAI), New Delhi:** *Indian Independence League (IIL) and Indian National Army (INA) Papers, 1942–1946.*
@@ -197,4 +182,7 @@ Invicta/
 
 ## 📄 License & Fair Use
 
-Historical texts, dispatches, and quotes are in the public domain or referenced under Fair Use for educational and non-commercial historical preservation. Reconstructed visual scenes are proprietary to this presentation.
+This project is open-source under the [MIT License](LICENSE).
+
+Historical documents, quotes, and archival photographs are curated for non-commercial educational, commemorative, and historical preservation purposes under Fair Use guidelines. Original photographic attributions belong to their respective archival repositories.
+

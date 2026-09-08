@@ -1,16 +1,36 @@
 {
-  "name": "invicta",
+  "name": "captain-lakshmi-invicta",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "description": "An interactive digital monograph and scroll-driven historical documentary honoring Captain Lakshmi Sahgal (1914–2012).",
+  "homepage": "https://github.com/jvstin47/Captain-Lakshmi-Invicta",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jvstin47/Captain-Lakshmi-Invicta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jvstin47/Captain-Lakshmi-Invicta/issues"
+  },
+  "author": "Justin <jvstin47>",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "lakshmi-sahgal",
+    "indian-national-army",
+    "rani-of-jhansi-regiment",
+    "historical-monograph",
+    "interactive-documentary",
+    "canvas-sequencer",
+    "react",
+    "vite",
+    "tailwind-css",
+    "digital-humanities"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "autoprefixer": "^10.5.4",
     "clsx": "^2.1.1",
@@ -23,6 +43,5 @@
     "@vitejs/plugin-react": "^4.7.0",
     "tailwindcss": "^3.4.19",
     "vite": "^5.4.21"
-  },
-  "type": "module"
+  }
 }
